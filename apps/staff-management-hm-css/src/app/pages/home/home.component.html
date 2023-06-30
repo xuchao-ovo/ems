@@ -1,0 +1,120 @@
+<nz-layout class="app-layout">
+  <nz-sider
+    class="menu-sidebar"
+    nzCollapsible
+    nzWidth="256px"
+    nzBreakpoint="md"
+    [(nzCollapsed)]="isCollapsed"
+    [nzTrigger]="null"
+  >
+    <div class="sidebar-logo">
+      <a href="#">
+        <img src="https://ng.ant.design/assets/img/logo.svg" alt="logo" />
+        <h1>员工管理系统</h1>
+      </a>
+    </div>
+    <ul
+      nz-menu
+      nzTheme="dark"
+      nzMode="inline"
+      [nzInlineCollapsed]="isCollapsed"
+    >
+      <li nz-submenu nzOpen nzTitle="Dashboard" nzIcon="dashboard">
+        <ul>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/Home/welcome">欢迎</a>
+          </li>
+        </ul>
+      </li>
+      <li nz-submenu nzTitle="员工" nzIcon="group">
+        <ul>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/Home/Employees/employee-list">员工管理</a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/Home/Employees/employee-add">添加员工</a>
+          </li>
+        </ul>
+      </li>
+      <li nz-submenu nzTitle="出勤" nzIcon="audit">
+        <ul>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/Home/Attendance/attendance-list">出勤管理</a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/Home/Attendance/attendance-add">录入出勤信息</a>
+          </li>
+        </ul>
+      </li>
+      <li nz-submenu nzTitle="工资" nzIcon="account-book">
+        <ul>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/Home/Salaries/salary-list">工资管理</a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/Home/Salaries/salary-add">录入工资信息</a>
+          </li>
+        </ul>
+      </li>
+      <li nz-submenu nzTitle="部门" nzIcon="apartment">
+        <ul>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/Home/Departments/department-list">部门管理</a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/Home/Departments/department-add">添加部门</a>
+          </li>
+        </ul>
+      </li>
+      <li nz-submenu nzTitle="角色" nzIcon="user">
+        <ul>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/Home/Role/role-list">角色管理</a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/Home/Role/role-add">添加角色</a>
+          </li>
+        </ul>
+      </li>
+      <li nz-submenu nzTitle="权限" nzIcon="appstore">
+        <ul>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/Home/Attendance/attendance-list">权限管理</a>
+          </li>
+          lapsed" [nzTrigger]="null">
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/Home/Attendance/attendance-list">添加权限</a>
+          </li>
+        </ul>
+      </li>
+      <li nz-submenu nzTitle="用户" nzIcon="dashboard">
+        <ul>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/Home/Attendance/attendance-list">修改密码</a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/Home/Attendance/attendance-list">退出登陆</a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </nz-sider>
+  <nz-layout>
+    <nz-header>
+      <div class="app-header">
+        <span class="header-trigger" (click)="isCollapsed = !isCollapsed">
+          <span
+            class="trigger"
+            nz-icon
+            [nzType]="isCollapsed ? 'menu-unfold' : 'menu-fold'"
+          ></span>
+        </span>
+      </div>
+    </nz-header>
+    <nz-content>
+      <div class="inner-content">
+        <router-outlet></router-outlet>
+      </div>
+    </nz-content>
+  </nz-layout>
+</nz-layout>

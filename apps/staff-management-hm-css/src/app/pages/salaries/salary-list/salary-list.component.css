@@ -1,0 +1,8 @@
+.save {
+  margin-right: 8px;
+}
+[nz-form] {
+  /* max-width: 600px; */
+  /* min-width: 200px; */
+  display: inline-flex;
+}
