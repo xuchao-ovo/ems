@@ -1,7 +1,9 @@
 import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { AuthService, RegisterDto, signInDto } from 'common';
 
 @Controller('auth')
+@ApiTags('auth')
 export class AuthController {
     constructor(private authService: AuthService) {}
 
@@ -14,6 +16,6 @@ export class AuthController {
     @HttpCode(HttpStatus.OK)
     @Post('register')
     register(@Body() registerDto: RegisterDto) {
-        // return this.authService.signIn(signInDto.username, signInDto.password);
+        return this.authService.register(registerDto);
     }
 }

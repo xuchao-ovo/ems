@@ -8,41 +8,38 @@ import {
   Delete,
   UseGuards,
 } from '@nestjs/common';
-import { AttendanceService, AuthGuard } from 'common';
+import { ApiTags } from '@nestjs/swagger';
+import { AttendanceDto, AttendanceService, AuthGuard, OperetorId } from 'common';
 
 
 
-
-@Controller('attendance')
+@ApiTags('attendances')
+@UseGuards(AuthGuard)
+@Controller('attendances')
 export class AttendanceController {
   constructor(private readonly attendanceService: AttendanceService) {}
 
-  // @Post()
-  // @UseGuards(AuthGuard)
-  // create(@Body() createUserDto: CreateUserDto) {
-  //   return this.departmentService.create(createUserDto);
-  // }
+  @Post()
+  create(@Body() createAttendanceDto: AttendanceDto, @OperetorId()operatorId: string) {
+    return this.attendanceService.create(createAttendanceDto, operatorId);
+  }
 
   @Get()
-  @UseGuards(AuthGuard)
   findAll() {
     return this.attendanceService.findAll();
   }
 
   @Get(':id')
-  @UseGuards(AuthGuard)
   findOne(@Param('id') id: string) {
     return this.attendanceService.findOne(id);
   }
 
-  // @Patch(':id')
-  // @UseGuards(AuthGuard)
-  // update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-  //   return this.departmentService.update(id, updateUserDto);
-  // }
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateAttendanceDto: AttendanceDto, @OperetorId()operatorId: string) {
+    return this.attendanceService.update(id, updateAttendanceDto, operatorId);
+  }
 
   @Delete(':id')
-  @UseGuards(AuthGuard)
   remove(@Param('id') id: string) {
     return this.attendanceService.remove(id);
   }

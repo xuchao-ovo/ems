@@ -25,5 +25,15 @@ export class Salary {
     total_salary!: number;
 
     @Property()
-    role_id!: string;
+    created_by!: string;
+
+    @Property()
+    created_at!: Date;
+
+    @Property({nullable: true})
+    updated_by!: string | null;
+
+    @Property({nullable: true})
+    updated_at!: Date | null;
+
 }

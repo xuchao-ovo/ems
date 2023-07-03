@@ -8,18 +8,20 @@ import {
   Delete,
   UseGuards,
 } from '@nestjs/common';
-import { AuthGuard, CreateDepartmentDto, DepartmentService, UpdateDepartmentDto } from 'common';
+import { ApiTags } from '@nestjs/swagger';
+import { AuthGuard, DepartmentDto, DepartmentService, OperetorId } from 'common';
 
 
 
 @UseGuards(AuthGuard)
-@Controller('department')
+@ApiTags('departments')
+@Controller('departments')
 export class DepartmentController {
   constructor(private readonly departmentService: DepartmentService) {}
 
   @Post()
-  create(@Body() createDepartmentDto: CreateDepartmentDto) {
-    return this.departmentService.create(createDepartmentDto);
+  create(@Body() createDepartmentDto: DepartmentDto, @OperetorId()operatorId: string) {
+    return this.departmentService.create(createDepartmentDto, operatorId);
   }
 
   @Get()
@@ -34,8 +36,8 @@ export class DepartmentController {
 
   @Patch(':id')
   @UseGuards(AuthGuard)
-  update(@Param('id') id: string, @Body() updateDepartmentDto: UpdateDepartmentDto) {
-    return this.departmentService.update(id, updateDepartmentDto);
+  update(@Param('id') id: string, @Body() updateDepartmentDto: DepartmentDto, @OperetorId() operatorId: string) {
+    return this.departmentService.update(id, updateDepartmentDto, operatorId);
   }
 
   @Delete(':id')

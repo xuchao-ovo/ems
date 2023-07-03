@@ -2,26 +2,29 @@ import { Injectable } from '@nestjs/common';
 
 import { EntityManager } from '@mikro-orm/postgresql';
 import { User } from '../entities/user.entity';
-import { CreateUserDto } from '../dto/create-user.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';
-import { NotFoundError } from 'rxjs';
+import { mcrypto } from '../../utils';
+import { UserDto } from '../dto/user.dto';
+import { instanceToPlain } from 'class-transformer';
 
 
 @Injectable()
 export class UsersService {
 
-  create(createUserDto: CreateUserDto) {
+  async create(createUserDto: UserDto, operatorId: string) {
+    const newUser = instanceToPlain(createUserDto) as User;
     this.em.create(User, {
-      username: createUserDto.username,
-      password: createUserDto.password,
-      roleId: 0,
-      isDelete: false
+      ...newUser,
+      created_at: new Date(),
+      created_by: operatorId,
+      updated_at: null,
+      updated_by: ''
     });
-    return this.em.flush();
+    return await this.em.flush();
   }
 
-  findAll() {
-    return this.em.find(User, {});
+  async findAll()           {
+    return await this.em.find(User, {});
   }
 
   async findOne(username: string): Promise<User | null> {
@@ -31,14 +34,18 @@ export class UsersService {
     return user?user:null;
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto) {
+  async update(id: string, updateUserDto: UpdateUserDto, operatorId: string) {
+    
     try {
       const toModifyUser: User =await this.em.findOneOrFail(User, {
         username: updateUserDto.username,
         password: updateUserDto.password
       })
-      toModifyUser.password = updateUserDto.new_password;
-      return this.em.flush();
+      const cryptedPassword = await new mcrypto().digest(updateUserDto.new_password)
+      toModifyUser.password = cryptedPassword;
+      toModifyUser.updated_at = new Date();
+      toModifyUser.updated_by = operatorId;
+      return this.em.upsert(User, toModifyUser);
     } catch (e) {
       return {code: 404, message: '用户未找到'}
     }
@@ -49,9 +56,9 @@ export class UsersService {
       const user: User =await this.em.findOneOrFail(User, {
         id: id
       })
-      return this.em.remove(user).flush();
+      return await this.em.remove(user).flush();
     } catch (e) {
-      return {code: 404, message: '用户未找到'}
+      return { code: 404, message: '用户未找到' }
     }
   }
 

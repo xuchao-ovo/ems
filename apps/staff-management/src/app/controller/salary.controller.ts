@@ -8,41 +8,38 @@ import {
   Delete,
   UseGuards,
 } from '@nestjs/common';
-import { AuthGuard, SalaryService } from 'common';
+import { ApiTags } from '@nestjs/swagger';
+import { AuthGuard, SalaryDto, OperetorId, SalaryService } from 'common';
 
 
 
-
-@Controller('salary')
+@ApiTags('salaries')
+@Controller('salaries')
+@UseGuards(AuthGuard)
 export class SalaryController {
   constructor(private readonly salaryService: SalaryService) {}
 
-  // @Post()
-  // @UseGuards(AuthGuard)
-  // create(@Body() createUserDto: CreateUserDto) {
-  //   return this.departmentService.create(createUserDto);
-  // }
+  @Post()
+  create(@Body() createSalaryDto: SalaryDto, @OperetorId()operatorId: string) {
+    return this.salaryService.create(createSalaryDto, operatorId);
+  }
 
   @Get()
-  @UseGuards(AuthGuard)
   findAll() {
     return this.salaryService.findAll();
   }
 
   @Get(':id')
-  @UseGuards(AuthGuard)
   findOne(@Param('id') id: string) {
     return this.salaryService.findOne(id);
   }
 
-  // @Patch(':id')
-  // @UseGuards(AuthGuard)
-  // update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-  //   return this.departmentService.update(id, updateUserDto);
-  // }
+  @Patch(':id')
+  update(@Param('id') id: string, @Body() updateSalaryDto: SalaryDto, @OperetorId() operatorId: string) {
+    return this.salaryService.update(id, updateSalaryDto, operatorId);
+  }
 
   @Delete(':id')
-  @UseGuards(AuthGuard)
   remove(@Param('id') id: string) {
     return this.salaryService.remove(id);
   }

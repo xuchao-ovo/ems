@@ -22,5 +22,15 @@ export class Attendance {
     leave_reason!: string;
 
     @Property()
-    overtime_status!: boolean;
+    created_by!: string;
+
+    @Property()
+    created_at!: Date;
+
+    @Property({nullable: true})
+    updated_by!: string | null;
+
+    @Property({nullable: true})
+    updated_at!: Date | null;
+
 }

@@ -1,4 +1,4 @@
-import { Entity, PrimaryKey } from "@mikro-orm/core";
+import { Entity, PrimaryKey, Property } from "@mikro-orm/core";
 
 @Entity({tableName: 'tb_user_roles'})
 export class User_role {
@@ -7,4 +7,17 @@ export class User_role {
   
     @PrimaryKey()
     role_id!: string;
+
+    @Property()
+    created_by!: string;
+
+    @Property()
+    created_at!: Date;
+
+    @Property({nullable: true})
+    updated_by!: string | null;
+
+    @Property({nullable: true})
+    updated_at!: Date | null;
+
 }

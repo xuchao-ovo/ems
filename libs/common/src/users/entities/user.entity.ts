@@ -12,8 +12,21 @@ export class User {
     password!: string;
 
     @Property({fieldName: 'role_id', nullable: true})
-    roleId!: number;
+    roleId!: string;
 
-    @Property({fieldName: 'is_delete', nullable: true})
-    isDelete!: boolean;
+    @Property({fieldName: 'employee_id', nullable: true})
+    employeeId!: string;
+
+    @Property()
+    created_by!: string;
+
+    @Property()
+    created_at!: Date;
+
+    @Property({nullable: true})
+    updated_by!: string | null;
+
+    @Property({nullable: true})
+    updated_at!: Date | null;
+
 }

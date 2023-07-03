@@ -2,13 +2,22 @@ import { Injectable } from '@nestjs/common';
 
 import { EntityManager } from '@mikro-orm/postgresql';
 import { Attendance } from '../entities/attendance.entity';
+import { AttendanceDto } from '../dto/attendance.dto';
+import { instanceToPlain } from 'class-transformer';
 
 
 @Injectable()
 export class AttendanceService {
 
-  async create() {
-    return '';
+  async create(createAttendanceDto: AttendanceDto, operatorId: string) {
+    const new_attendance: Attendance =  instanceToPlain(createAttendanceDto) as Attendance;
+    return this.em.create(Attendance, {
+      ...new_attendance,
+      created_at: new Date(),
+      created_by: operatorId,
+      updated_at: null,
+      updated_by: ''
+    });
   }
 
   async findAll() {
@@ -22,8 +31,21 @@ export class AttendanceService {
     return attendance?attendance:null;
   }
 
-  async update() {
-    return '';
+  async update(id: string, updateAttendanceDto: AttendanceDto, operatorId: string) {
+    try {
+      let toModifySalary: Attendance =await this.em.findOneOrFail(Attendance, {
+        id: updateAttendanceDto.id
+      })
+      const mod_attendance = instanceToPlain(updateAttendanceDto) as Attendance;
+      toModifySalary = {
+        ...mod_attendance,
+        updated_at: new Date(),
+        updated_by: operatorId
+      }
+      return await this.em.upsert(Attendance, updateAttendanceDto);
+    } catch (e) {
+      return await {code: 404, message: '未找到'}
+    }
   }
 
   async remove(id: string) {

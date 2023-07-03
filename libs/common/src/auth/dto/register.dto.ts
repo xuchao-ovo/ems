@@ -6,5 +6,6 @@ export class RegisterDto {
     gender!: string;
     position!: string;
     department_id!: string;
+    role_id!: string;
     is_leader!: boolean;
 }

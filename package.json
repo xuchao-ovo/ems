@@ -29,6 +29,7 @@
     "@nestjs/platform-express": "^10.0.2",
     "@nestjs/swagger": "^7.0.12",
     "axios": "^1.0.0",
+    "class-transformer": "^0.5.1",
     "cron-parser": "^4.8.1",
     "d3-selection": "^3.0.0",
     "d3-shape": "^3.2.0",

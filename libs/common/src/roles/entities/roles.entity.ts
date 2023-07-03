@@ -10,4 +10,17 @@ export class Role {
   
     @Property()
     description!: string;
+
+    @Property()
+    created_by!: string;
+
+    @Property()
+    created_at!: Date;
+
+    @Property({nullable: true})
+    updated_by!: string | null;
+
+    @Property({nullable: true})
+    updated_at!: Date | null;
+
 }
