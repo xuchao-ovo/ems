@@ -24,6 +24,7 @@ export class AuthService {
         
         // instead of the user object
         return {
+          id: user?.id,
           access_token: await this.jwtService.signAsync(payload, {
             secret: jwtConstants.secret,
             expiresIn: 1000*60

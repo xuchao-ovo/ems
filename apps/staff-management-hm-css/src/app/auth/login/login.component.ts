@@ -2,8 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { LoginService } from './login.service';
-import { LoginForm } from './login.type';
-
+import { LoginForm } from './login.interface';
 import { Router } from '@angular/router';
 
 @Component({
@@ -20,7 +19,15 @@ export class LoginComponent implements OnInit {
       const { username, password } = this.validateForm.value;
       const loginParams: LoginForm = { username, password };
       this.loginService.login(loginParams).subscribe((res) => {
-        this.router.navigate(['/welcome']);
+        console.log(res)
+        if('code' in res) {
+          res
+        }else{
+          localStorage.setItem('access_token', res.access_token);
+          localStorage.setItem('id', res.id);
+          this.router.navigate(['/Home/welcome']);
+        }
+        
       });
     } else {
       Object.values(this.validateForm.controls).forEach((control) => {
@@ -40,7 +47,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.validateForm = this.fb.group({
-      userName: [null, [Validators.required]],
+      username: [null, [Validators.required]],
       password: [null, [Validators.required]],
       remember: [true],
     });

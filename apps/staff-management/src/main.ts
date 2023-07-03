@@ -12,6 +12,7 @@ import { AppModule } from './app/app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.enableCors();
   const globalPrefix = 'api';
   const config = new DocumentBuilder()
     .setTitle('员工管理系统')

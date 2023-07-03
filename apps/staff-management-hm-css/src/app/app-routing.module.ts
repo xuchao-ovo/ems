@@ -2,13 +2,20 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 // import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { HomeComponent } from './pages/home/home.component';
+import { LoginComponent } from './auth/login/login.component'
+import { RegisterComponent } from './auth/register/register.component';
+import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
 const routes: Routes = [
   // 默认打开面板界面（这个要验证是否登陆）
   { path: '', pathMatch: 'full', redirectTo: '/Home' },
   {
-    path: 'Login',
-    loadChildren: () =>
-      import('./auth/login/login.module').then((m) => m.LoginModule),
+    path: 'Login', component: LoginComponent
+  },
+  {
+    path: 'Register', component: RegisterComponent
+  },
+  {
+    path: '404', component: PageNotFoundComponent
   },
   {
     path: 'Home',
@@ -59,9 +66,13 @@ const routes: Routes = [
             (m) => m.PageNotFoundModule
           ),
       },
+      {
+        path: '**',
+        component: PageNotFoundComponent
+      },
     ],
   },
-  { path: '**', pathMatch: 'full', redirectTo: '/Home/Page-Not-Found' },
+  { path: '**', pathMatch: 'full', redirectTo: '/404' },
 ];
 
 @NgModule({

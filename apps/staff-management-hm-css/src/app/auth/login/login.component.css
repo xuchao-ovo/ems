@@ -1,4 +1,4 @@
-.login-form {
+/* .login-form {
   max-width: 300px;
 }
 
@@ -10,11 +10,25 @@
   float: right;
 }
 
-.login-form-button {
-  width: 100%;
-}
-
 .login-wrapper {
   height: 100vh;
   width: 100vw;
+} */
+
+.login-wrapper {
+  padding-top: 5vh;
+} 
+
+.login-form-button {
+  margin: 10px 0;
+  width: 100%;
+}
+
+.main-container{
+  background: #ECECEC;
+  /* padding:30px; */
+  height: 100vh;
+  display: flex;  
+  justify-content: center;  
+  align-items: center;  
 }
