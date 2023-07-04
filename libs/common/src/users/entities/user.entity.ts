@@ -1,8 +1,8 @@
 import { Entity, PrimaryKey, Property } from "@mikro-orm/core";
-
+// const uuid = require('uuid')
 @Entity({tableName: 'tb_user'})
 export class User {
-    @PrimaryKey()
+    @PrimaryKey({ type: 'uuid', defaultRaw: 'uuid_generate_v4()' })
     id!: string;
   
     @Property()
@@ -10,18 +10,14 @@ export class User {
   
     @Property()
     password!: string;
+    
+    @Property({nullable: true})
 
-    @Property({fieldName: 'role_id', nullable: true})
-    roleId!: string;
+    created_by!: string | null;
 
-    @Property({fieldName: 'employee_id', nullable: true})
-    employeeId!: string;
+    @Property({nullable: true})
 
-    @Property()
-    created_by!: string;
-
-    @Property()
-    created_at!: Date;
+    created_at!: Date | null;
 
     @Property({nullable: true})
     updated_by!: string | null;

@@ -1,4 +1,4 @@
-import { Entity, PrimaryKey, Property } from "@mikro-orm/core";
+import { Collection, Entity, ManyToOne, OneToMany, PrimaryKey, Property } from "@mikro-orm/core";
 
 @Entity({tableName: 'tb_department'})
 export class Department {
@@ -13,7 +13,6 @@ export class Department {
 
     @Property()
     parent_id?: string;
-
     @Property()
     created_by?: string;
 

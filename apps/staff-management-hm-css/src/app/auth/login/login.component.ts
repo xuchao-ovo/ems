@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { LoginService } from './login.service';
 import { LoginForm } from './login.interface';
 import { Router } from '@angular/router';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 
 @Component({
   selector: 'app-login',
@@ -20,8 +21,13 @@ export class LoginComponent implements OnInit {
       const loginParams: LoginForm = { username, password };
       this.loginService.login(loginParams).subscribe((res) => {
         console.log(res)
-        if('code' in res) {
-          res
+        if('message' in res) {
+          this.notification.create(
+            'error',
+            '错误',
+            res['message']
+          );
+          return;
         }else{
           localStorage.setItem('access_token', res.access_token);
           localStorage.setItem('id', res.id);
@@ -42,7 +48,8 @@ export class LoginComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private loginService: LoginService,
-    private router: Router
+    private router: Router,
+    private notification: NzNotificationService,
   ) {}
 
   ngOnInit(): void {

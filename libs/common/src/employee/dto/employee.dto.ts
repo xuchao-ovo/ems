@@ -15,8 +15,8 @@ export class EmployeeDto {
     departmentId?: string;
     @Expose({name: 'is_leader'})
     isLeader?: boolean;
-    @Expose({name: 'role_id'})
-    roleId?: string;
+    @Expose({name: 'user_id'})
+    userId?: string;
     @Expose({name: 'created_by'})
     createdBy?: string;
     @Expose({name: 'created_at'})

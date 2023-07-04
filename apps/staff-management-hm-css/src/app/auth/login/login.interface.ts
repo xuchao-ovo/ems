@@ -3,17 +3,6 @@ export interface LoginForm {
   password: string;
 }
 
-export interface RegisterForm{
-  username: string;
-  password: string;
-  name: string;
-  age: string;
-  gender: string;
-  position: string;
-  department_id: string;
-  is_leader: string;
-}
-
 export interface LoginResponse{
   id: string,
   access_token: string

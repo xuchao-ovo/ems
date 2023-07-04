@@ -41,7 +41,7 @@ export class UsersService {
         username: updateUserDto.username,
         password: updateUserDto.password
       })
-      const cryptedPassword = await new mcrypto().digest(updateUserDto.new_password)
+      const cryptedPassword = await new mcrypto().encrypt(updateUserDto.new_password)
       toModifyUser.password = cryptedPassword;
       toModifyUser.updated_at = new Date();
       toModifyUser.updated_by = operatorId;

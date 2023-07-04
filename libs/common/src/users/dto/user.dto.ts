@@ -1,16 +1,13 @@
-import { Expose } from 'class-transformer';
+import { Exclude, Expose } from 'class-transformer';
 export class UserDto {
     
     @Expose()
     id?: string;
     @Expose()
     username?: string;
-    @Expose()
+    // @Expose()
+    @Exclude({ toPlainOnly: true })
     password?: string;
-    @Expose({name: 'employee_id'})
-    employeeId?: string;
-    @Expose({name: 'role_id'})
-    roleId?: string;
     @Expose({name: 'created_by'})
     createdBy?: string;
     @Expose({name: 'created_at'})

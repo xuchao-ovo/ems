@@ -1,4 +1,4 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { AuthService, RegisterDto, signInDto } from 'common';
 
@@ -17,5 +17,17 @@ export class AuthController {
     @Post('register')
     register(@Body() registerDto: RegisterDto) {
         return this.authService.register(registerDto);
+    }
+
+    @HttpCode(HttpStatus.OK)
+    @Post('employee_info')
+    employee_info(@Body() registerDto: RegisterDto) {
+        return this.authService.employee_info(registerDto);
+    }
+
+    @HttpCode(HttpStatus.OK)
+    @Get('load_department')
+    load_department() {
+        return this.authService.load_department();
     }
 }

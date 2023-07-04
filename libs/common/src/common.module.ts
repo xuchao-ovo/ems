@@ -11,6 +11,12 @@ import { RoleService } from './roles/service/role.service';
 import { AttendanceService } from './attendance/service/attendance.service';
 import { DepartmentService } from './departments/service/department.service';
 import { EmployeeService } from './employee/service/employee.service';
+import { Salary } from './salary/entities/salary.entity';
+import { Attendance } from './attendance/entities/attendance.entity';
+import { Department } from './departments/entities/departments.entity';
+import { Role } from './roles/entities/roles.entity';
+import { User_role } from './users/entities/user_role.entity';
+import { Employee } from './employee/entities/employee.entity';
 @Module({
   providers: [
     AuthService,
@@ -26,7 +32,15 @@ import { EmployeeService } from './employee/service/employee.service';
   imports:[
     ConfigModule,
     MikroOrmModule.forRoot({
-      entities: [User],
+      entities: [
+        User, 
+        User_role, 
+        Role, 
+        Department, 
+        Attendance, 
+        Employee, 
+        Salary
+      ],
     }),
     JwtModule.register({
       global: true,

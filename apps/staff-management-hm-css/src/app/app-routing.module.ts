@@ -1,10 +1,12 @@
-import { NgModule } from '@angular/core';
+import { NgModule, inject } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 // import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { HomeComponent } from './pages/home/home.component';
 import { LoginComponent } from './auth/login/login.component'
 import { RegisterComponent } from './auth/register/register.component';
 import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
+import { AuthGuard } from './guard/guard'
+
 const routes: Routes = [
   // 默认打开面板界面（这个要验证是否登陆）
   { path: '', pathMatch: 'full', redirectTo: '/Home' },
@@ -20,6 +22,7 @@ const routes: Routes = [
   {
     path: 'Home',
     component: HomeComponent,
+    canActivate:[() => inject(AuthGuard).canActivate()],
     children: [
       {
         path: 'welcome',

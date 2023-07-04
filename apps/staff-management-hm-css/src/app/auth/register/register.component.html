@@ -3,124 +3,119 @@
       <div nz-row>
         <div nz-col nzSpan="24">
           <nz-steps nzType="navigation" [nzCurrent]="index" (nzIndexChange)="onIndexChange($event)">
-            <nz-step nzTitle="注册账户" nzStatus="process"></nz-step>
-            <nz-step nzTitle="填写资料" nzStatus="wait"></nz-step>
-            <nz-step nzTitle="完成注册" nzStatus="finish"></nz-step>
-            <!-- <nz-step nzTitle="Step 4" nzStatus="wait"></nz-step> -->
+            <nz-step *ngFor="let i of steps" nzTitle="{{ i.title }}" nzStatus="{{ i.status }}"></nz-step>
           </nz-steps>
         </div>
       </div>
       <div nz-row>
-        <div nz-col nzSpan="24">
-          <div *ngIf="index==0">
-            <form nz-form>
-              <br /><br />
-              <nz-form-item>
-                <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="username">用户名</nz-form-label>
-                <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="请输入用户名">
-                  <input nz-input id="username" />
-                </nz-form-control>
-              </nz-form-item>
-              <nz-form-item>
-                <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="password">密码</nz-form-label>
-                <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="请输入密码">
-                  <input nz-input id="password" />
-                </nz-form-control>
-              </nz-form-item>
-              <nz-form-item>
-                <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="password2">确认密码</nz-form-label>
-                <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="请输入密码">
-                  <input nz-input id="password2" />
-                </nz-form-control>
-              </nz-form-item>
-              <!-- <nz-form-item nz-row class="register-area">
-                <nz-form-control [nzSpan]="14" [nzOffset]="6">
-                  <label nz-checkbox formControlName="agree">
-                    <span>
-                      我已阅读并同意
-                      <a>协议</a>
-                    </span>
-                  </label>
-                </nz-form-control>
-              </nz-form-item> -->
-              <nz-form-item nz-row class="register-area">
-                <nz-form-control [nzSpan]="14" [nzOffset]="11">
-                  <button nz-button nzType="primary">下一步</button>
-                </nz-form-control>
-              </nz-form-item>
-            </form>
+        <form nz-form [formGroup]="registerForm">
+          <div nz-col nzSpan="24">
+            <div *ngIf="index==0">
+                <br /><br />
+                <nz-form-item>
+                  <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="username">用户名</nz-form-label>
+                  <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="请输入用户名">
+                    <input nz-input id="username" formControlName="username" />
+                  </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                  <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="password">密码</nz-form-label>
+                  <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="请输入密码">
+                    <input nz-input type="password" id="password" formControlName="password" />
+                  </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                  <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="password2">确认密码</nz-form-label>
+                  <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="请输入密码">
+                    <input nz-input type="password" id="password2" formControlName="password2" />
+                  </nz-form-control>
+                </nz-form-item>
+                <nz-form-item nz-row class="register-area">
+                  <nz-form-control [nzSpan]="14" [nzOffset]="11">
+                    <button nz-button nzType="primary" (click)="reg_user()">下一步</button>
+                  </nz-form-control>
+                </nz-form-item>
+            </div>
+            <div *ngIf="index==1">
+                <br /><br />
+                <nz-form-item>
+                  <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">姓名</nz-form-label>
+                  <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="请输入姓名">
+                    <input nz-input id="name" formControlName="name" placeholder="请输入您的真实姓名" />
+                  </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                  <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="age">年龄</nz-form-label>
+                  <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="请输入年龄">
+                    <nz-input-number
+                      [nzMin]="18"
+                      [nzMax]="120"
+                      [nzStep]="1"
+                      [nzFormatter]="formatterAge"
+                      [nzParser]="parserAge"
+                      formControlName="age"
+                    ></nz-input-number>
+                  </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                  <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="department">部门</nz-form-label>
+                  <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="请选择部门">
+                    <nz-tree-select
+                      style="width: 250px"
+                      [nzExpandedKeys]="expandKeys"
+                      [nzNodes]="nodes"
+                      nzShowSearch
+                      nzPlaceHolder="请选择你的部门"
+                      [(ngModel)]="value"
+                      formControlName="department_id"
+                      (ngModelChange)="onChange($event)"
+                    ></nz-tree-select>
+                  </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                  <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="department">部门</nz-form-label>
+                  <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="请输入部门">
+                    <nz-radio-group formControlName="gender" nzButtonStyle="solid">
+                      <label nz-radio-button nzValue="M">男</label>
+                      <label nz-radio-button nzValue="F">女</label>
+                    </nz-radio-group>
+                  </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                  <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="position">职位</nz-form-label>
+                  <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="请输入职位">
+                    <input nz-input formControlName="position" id="position" placeholder="请输入您的职位" />
+                  </nz-form-control>
+                </nz-form-item>
+                <nz-form-item nz-row class="register-area">
+                  <nz-form-control [nzSpan]="14" [nzOffset]="6">
+                    <label nz-checkbox formControlName="agree">
+                      <span>
+                        我已阅读并同意
+                        <a>协议</a>
+                      </span>
+                    </label>
+                  </nz-form-control>
+                </nz-form-item>
+                <nz-form-item nz-row class="register-area">
+                  <nz-form-control [nzSpan]="14" [nzOffset]="11">
+                    <button nz-button nzType="primary" (click)="reg_info()">创建账户</button>
+                  </nz-form-control>
+                </nz-form-item>
+            </div>
+            <div *ngIf="index==2">
+              <nz-result
+                nzStatus="success"
+                nzTitle="注册成功!"
+                nzSubTitle="您注册的账号为: 2017182818828182881, 请进入个人中心或返回登陆."
+              >
+                <div nz-result-extra>
+                  <button nz-button nzType="primary" (click)="goHome()">登陆</button>
+                </div>
+              </nz-result>
+            </div>
           </div>
-          <div *ngIf="index==1">
-            <form nz-form>
-              <br /><br />
-              <nz-form-item>
-                <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="name">姓名</nz-form-label>
-                <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="请输入姓名">
-                  <input nz-input id="name" placeholder="请输入您的真实姓名" />
-                </nz-form-control>
-              </nz-form-item>
-              <nz-form-item>
-                <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="age">年龄</nz-form-label>
-                <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="请输入年龄">
-                  <nz-input-number
-                    [nzMin]="18"
-                    [nzMax]="120"
-                    [nzStep]="1"
-                    [nzFormatter]="formatterAge"
-                    [nzParser]="parserAge"
-                  ></nz-input-number>
-                </nz-form-control>
-              </nz-form-item>
-              <nz-form-item>
-                <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="department">部门</nz-form-label>
-                <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="请输入部门">
-                  <nz-tree-select
-                    style="width: 250px"
-                    [nzExpandedKeys]="expandKeys"
-                    [nzNodes]="nodes"
-                    nzShowSearch
-                    nzPlaceHolder="请选择你的部门"
-                    [(ngModel)]="value"
-                    (ngModelChange)="onChange($event)"
-                  ></nz-tree-select>
-                </nz-form-control>
-              </nz-form-item>
-              <nz-form-item>
-                <nz-form-label [nzSm]="6" [nzXs]="24" nzRequired nzFor="position">职位</nz-form-label>
-                <nz-form-control [nzSm]="14" [nzXs]="24" nzErrorTip="请输入职位">
-                  <input nz-input id="position" placeholder="请输入您的职位" />
-                </nz-form-control>
-              </nz-form-item>
-              <nz-form-item nz-row class="register-area">
-                <nz-form-control [nzSpan]="14" [nzOffset]="6">
-                  <label nz-checkbox formControlName="agree">
-                    <span>
-                      我已阅读并同意
-                      <a>协议</a>
-                    </span>
-                  </label>
-                </nz-form-control>
-              </nz-form-item>
-              <nz-form-item nz-row class="register-area">
-                <nz-form-control [nzSpan]="14" [nzOffset]="11">
-                  <button nz-button nzType="primary">创建账户</button>
-                </nz-form-control>
-              </nz-form-item>
-            </form>
-          </div>
-          <div *ngIf="index==2">
-            <nz-result
-              nzStatus="success"
-              nzTitle="注册成功!"
-              nzSubTitle="您注册的账号为: 2017182818828182881, 请进入个人中心或返回登陆."
-            >
-              <div nz-result-extra>
-                <button nz-button nzType="primary" (click)="goHome()">个人中心</button>
-                <button nz-button>返回登陆</button>
-              </div>
-            </nz-result>
-          </div>
-        </div>
+        </form>
       </div>
     </nz-card>
   </div>

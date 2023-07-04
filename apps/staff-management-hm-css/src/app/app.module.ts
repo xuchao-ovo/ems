@@ -8,7 +8,7 @@ import { zh_CN } from "ng-zorro-antd/i18n";
 import { registerLocaleData } from "@angular/common";
 import zh from "@angular/common/locales/zh";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { HttpClientModule } from "@angular/common/http";
+import { HTTP_INTERCEPTORS, HttpClientModule } from "@angular/common/http";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { IconsProviderModule } from "./icons-provider.module";
 
@@ -91,6 +91,9 @@ import { HomeComponent } from "./pages/home/home.component";
 import { LoginComponent } from "./auth/login/login.component";
 import { RegisterComponent } from "./auth/register/register.component";
 import { PageNotFoundComponent } from "./pages/page-not-found/page-not-found.component";
+import { TokenInterceptor } from "./interceptors/token-interceptor";
+import { provideRouter } from "@angular/router";
+import { AuthGuard } from "./guard/guard";
 registerLocaleData(zh);
 
 @NgModule({
@@ -184,7 +187,11 @@ registerLocaleData(zh);
     NzQRCodeModule,
     NzWaterMarkModule,
   ],
-  providers: [{ provide: NZ_I18N, useValue: zh_CN }],
+  providers: [
+    { provide: NZ_I18N, useValue: zh_CN },
+    { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true},
+    AuthGuard
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

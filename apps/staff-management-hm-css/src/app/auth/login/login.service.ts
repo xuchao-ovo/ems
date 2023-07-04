@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 
-import { FailResponse, LoginForm, LoginResponse, RegisterForm } from './login.interface';
+import { FailResponse, LoginForm, LoginResponse } from './login.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -11,9 +11,5 @@ export class LoginService {
 
   login(loginForm: LoginForm) {
     return this.http.post<LoginResponse | FailResponse>(`http://localhost:3000/api/auth/login`, loginForm);
-  }
-
-  register(registerForm: RegisterForm){
-    return this.http.post<LoginResponse | FailResponse>(`http://localhost:3000/api/auth/register`, registerForm);
   }
 }
