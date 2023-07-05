@@ -1,15 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { EmployeeService } from '../service/employee.service';
+import { IEmployee } from '../interface/employee.interface';
+import { firstValueFrom } from 'rxjs';
 
-interface ItemData {
-  id: string;
-  name: string;
-  age: number;
-  gender: string;
-  position: string;
-  is_leader: boolean;
-  username: string;
-}
 
 @Component({
   selector: 'app-employee-list',
@@ -17,34 +11,52 @@ interface ItemData {
   styleUrls: ['./employee-list.component.css'],
 })
 export class EmployeeListComponent {
-  listOfData: ItemData[] = [];
-  editCache: { [key: string]: { edit: boolean; data: ItemData } } = {};
+  listOfData: IEmployee[] = [];
+  editCache: { [key: string]: { edit: boolean; data: IEmployee } } = {};
   validateForm!: FormGroup;
+  isVisible = false;
+  constructor(private fb: FormBuilder, private employeeService: EmployeeService) {}
+  openModal(){
+    this.isVisible = true;
+  }
 
-  constructor(private fb: FormBuilder) {}
-
-  ngOnInit(): void {
+  handleOk(){
+    
+  }
+  async ngOnInit() {
+    this.listOfData = await (firstValueFrom(this.employeeService.get_employee()));
+    // this.employeeService.get_employee().subscribe(res => {
+    //   for (let i of res) {
+    //     this.listOfData.push(i);
+    //   }
+    //   console.log(this.listOfData)
+    // })
+    // (await this.employeeService.get_employee()).subscribe(res => {
+      
+    //   for (let i of res) {
+    //     this.listOfData.push({
+    //       ...i
+    //     });
+    //   }
+    //   console.log(this.listOfData)
+    // })
     this.validateForm = this.fb.group({
-      name: [null, []],
-      month: [null, []],
-      less: [null, []],
-      more: [null, []],
+      name: ['', []],
+      month: ['', []],
+      less: ['', []],
+      more: ['', []],
     });
 
-    for (let i = 0; i < 100; i++) {
-      this.listOfData.push({
-        id: Math.round(Math.random() * 10000 + 1).toString(),
-        name: `Pang ${i}`,
-        age: Math.round(Math.random() * 30 + 18),
-        gender: '男',
-        position: '某职位',
-        is_leader: false,
-        username: `Pang ${i}`,
-      });
-    }
+    
     this.updateEditCache();
   }
 
+
+  deleteItem(id: string){
+    this.employeeService.delete_employee(id).subscribe(res => {
+      // 刷新列表数据
+    })
+  }
   submitForm(): void {
     if (this.validateForm.valid) {
       console.log('submit', this.validateForm.value);
@@ -80,6 +92,9 @@ export class EmployeeListComponent {
   saveEdit(id: string): void {
     const index = this.listOfData.findIndex((item) => item.id === id);
     Object.assign(this.listOfData[index], this.editCache[id].data);
+    this.employeeService.patch_employee(id, this.editCache[id].data).subscribe(res => {
+      // 刷新列表
+    })
     this.editCache[id].edit = false;
   }
 

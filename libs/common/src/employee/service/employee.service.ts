@@ -4,6 +4,8 @@ import { EntityManager } from '@mikro-orm/postgresql';
 import { Employee } from '../entities/employee.entity';
 import { EmployeeDto } from '../dto/employee.dto';
 import { instanceToPlain } from 'class-transformer';
+import { IEmployee } from '../inerfacee/employee.interface';
+import { QBFilterQuery } from '@mikro-orm/core';
 
 
 @Injectable()
@@ -24,6 +26,10 @@ export class EmployeeService {
     return await this.em.find(Employee, {});
   }
 
+  async filter(condition: QBFilterQuery<Employee>){
+    return this.em.createQueryBuilder(Employee).select('*').where(condition);
+  }
+
   async findOne(id: string): Promise<Employee | null> {
     const employee: Employee = await this.em.findOneOrFail(Employee, {
       id: id,
@@ -33,7 +39,7 @@ export class EmployeeService {
 
   async update(id: string, updateEmployeeDto: EmployeeDto, operatorId: string) {
     try {
-      let toModifyEmployee: Employee =await this.em.findOneOrFail(Employee, {
+      let toModifyEmployee: Employee = await this.em.findOneOrFail(Employee, {
         id: updateEmployeeDto.id
       })
       const mod_salary = instanceToPlain(updateEmployeeDto) as Employee;
@@ -44,7 +50,7 @@ export class EmployeeService {
       }
       return await this.em.upsert(Employee, updateEmployeeDto);
     } catch (e) {
-      return await {code: 404, message: '未找到'}
+      return { code: 404, message: '未找到' }
     }
   }
 

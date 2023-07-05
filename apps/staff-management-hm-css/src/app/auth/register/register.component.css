@@ -6,3 +6,9 @@
     justify-content: center;  
     align-items: center;  
 }
+
+.sub-container{
+    display: flex;  
+    justify-content: center;  
+    align-items: center;  
+}

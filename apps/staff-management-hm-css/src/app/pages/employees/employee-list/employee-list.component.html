@@ -1,45 +1,64 @@
-<form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()">
-  <nz-form-item>
-    <nz-form-label [nzSpan]="5" nzFor="name">名字</nz-form-label>
-    <nz-form-control [nzSpan]="12" nzErrorTip="请输入员工姓名">
-      <input id="name" type="text" nz-input formControlName="name" />
-    </nz-form-control>
-  </nz-form-item>
-  <nz-form-item>
-    <nz-form-label [nzSpan]="7" nzFor="month">月份</nz-form-label>
-    <nz-form-control [nzSpan]="12" nzErrorTip="请选择月份">
-      <nz-select
-        id="month"
-        formControlName="month"
-        nzPlaceHolder="选择一个月份"
-        (ngModelChange)="genderChange($event)"
-      >
-        <nz-option
-          *ngFor="let i of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]"
-          nzValue="{{ i }}"
-          nzLabel="{{ i }}月"
-        ></nz-option>
-      </nz-select>
-    </nz-form-control>
-  </nz-form-item>
-  <nz-form-item>
-    <nz-form-label [nzSpan]="5" nzFor="less">少于</nz-form-label>
-    <nz-form-control [nzSpan]="12" nzErrorTip="出勤少于">
-      <input id="less" type="text" nz-input formControlName="less" />
-    </nz-form-control>
-  </nz-form-item>
-  <nz-form-item>
-    <nz-form-label [nzSpan]="5" nzFor="more">多于</nz-form-label>
-    <nz-form-control [nzSpan]="12" nzErrorTip="出勤多于">
-      <input id="more" type="text" nz-input formControlName="more" />
-    </nz-form-control>
-  </nz-form-item>
-  <nz-form-item>
-    <nz-form-control [nzSpan]="12" [nzOffset]="5">
-      <button nz-button nzType="primary">搜索</button>
-    </nz-form-control>
-  </nz-form-item>
-</form>
+<nz-collapse>
+  <nz-collapse-panel
+    [nzHeader]="'选项'"
+    [nzActive]="true"
+  >
+  <form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()">
+    <nz-form-item>
+      <nz-form-label [nzSpan]="5" nzFor="name">名字</nz-form-label>
+      <nz-form-control [nzSpan]="12" nzErrorTip="请输入员工姓名">
+        <input id="name" type="text" nz-input formControlName="name" />
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="5" nzFor="position">职位</nz-form-label>
+      <nz-form-control [nzSpan]="12" nzErrorTip="请选择职位">
+        <nz-select
+          id="position"
+          formControlName="position"
+          nzPlaceHolder="选择筛选职位"
+          (ngModelChange)="genderChange($event)"
+        >
+          <nz-option
+            *ngFor="let i of ['全栈工程师', '前端工程师', '后端工程师']"
+            nzValue="{{ i }}"
+            nzLabel="{{ i }}"
+          ></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="5" nzFor="gender">性别</nz-form-label>
+      <nz-form-control [nzSpan]="12" nzErrorTip="请选择性别">
+        <label nz-checkbox>男</label> 
+        <label nz-checkbox>女</label> 
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="5" nzFor="less">年龄</nz-form-label>
+      <nz-form-control [nzSpan]="12" nzErrorTip="年龄范围">
+        <!-- <input id="less" type="text" nz-input formControlName="less" /> -->
+        <nz-slider id="less" nzRange formControlName="less" [nzDisabled]="false"></nz-slider>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label [nzSpan]="5" nzFor="more">是否领导</nz-form-label>
+      <nz-form-control [nzSpan]="12" nzErrorTip="是否领导">
+        <nz-switch id="more"  formControlName="more" nzCheckedChildren="是" nzUnCheckedChildren="否"></nz-switch>
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-control [nzSpan]="12" [nzOffset]="10">
+        <!-- <button nz-button nzType="primary">搜索</button> -->
+        <button nz-button nzType="primary">搜索</button> &nbsp;&nbsp;
+        <button nz-button nzType="default" (click)="openModal()">添加员工</button>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+  </nz-collapse-panel>
+</nz-collapse>
+
+
 <nz-table
   #fixedTable
   [nzData]="listOfData"
@@ -47,9 +66,8 @@
 >
   <thead>
     <tr>
-      <th nzLeft>id</th>
+      <!-- <th nzLeft>id</th> -->
       <th nzLeft>名字</th>
-      <th nzLeft>用户名</th>
       <th nzLeft>年龄</th>
       <th nzLeft>性别</th>
       <th nzLeft>是否领导</th>
@@ -59,23 +77,25 @@
   </thead>
   <tbody>
     <tr *ngFor="let data of fixedTable.data">
-      <ng-container *ngIf="!editCache[data.id].edit && listOfData.length < 1">
-        <nz-empty></nz-empty>
-      </ng-container>
       <ng-container
         *ngIf="
-          !editCache[data.id].edit && listOfData.length > 0;
+          !editCache[data.id].edit;
           else editTemplate
         "
       >
-        <td nzLeft>{{ data.id }}</td>
+        <!-- <td nzLeft>{{ data.id }}</td> -->
         <td nzLeft>{{ data.name }}</td>
-        <td nzLeft>{{ data.username }}</td>
         <td nzLeft>{{ data.age }}</td>
-        <td nzLeft>{{ data.gender }}</td>
-        <td nzLeft>{{ data.is_leader }}</td>
-        <td nzLeft>{{ data.position }}</td>
-        <td><a (click)="startEdit(data.id)">编辑</a></td>
+        <td nzLeft>{{ data.gender=='M'?'男':'女' }}</td>
+        <td nzLeft>{{ data.is_leader?'是':'否' }}</td>
+       
+        <td nzLeft>
+          <nz-tag [nzColor]="'#87d068'">{{ data.position }}</nz-tag>
+        </td>
+        <td>
+          <nz-tag [nzColor]="'#2db7f5'"><a (click)="startEdit(data.id)">编辑</a></nz-tag>
+          <nz-tag [nzColor]="'#f50'"><a (click)="deleteItem(data.id)">删除</a></nz-tag>
+        </td>
       </ng-container>
       <ng-template #editTemplate>
         <td>
@@ -90,13 +110,6 @@
             type="text"
             nz-input
             [(ngModel)]="editCache[data.id].data.name"
-          />
-        </td>
-        <td>
-          <input
-            type="text"
-            nz-input
-            [(ngModel)]="editCache[data.id].data.username"
           />
         </td>
         <td>
@@ -128,15 +141,21 @@
           />
         </td>
         <td>
-          <a (click)="saveEdit(data.id)" class="save">保存</a>
-          <a
+          <nz-tag [nzColor]="'#2db7f5'"><a (click)="saveEdit(data.id)" class="save">保存</a></nz-tag>
+          <nz-tag [nzColor]="'#f50'"><a
             nz-popconfirm
             nzPopconfirmTitle="确定取消?"
             (nzOnConfirm)="cancelEdit(data.id)"
-            >取消</a
-          >
+            >取消</a></nz-tag>
         </td>
       </ng-template>
     </tr>
   </tbody>
 </nz-table>
+<nz-modal [(nzVisible)]="isVisible" nzTitle="添加员工" (nzOnOk)="handleOk()">
+  <ng-container *nzModalContent>
+    <p>Content one</p>
+    <p>Content two</p>
+    <p>Content three</p>
+  </ng-container>
+</nz-modal>

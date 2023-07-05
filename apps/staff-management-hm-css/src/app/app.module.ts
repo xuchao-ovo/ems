@@ -90,10 +90,9 @@ import { NzWaterMarkModule } from "ng-zorro-antd/water-mark";
 import { HomeComponent } from "./pages/home/home.component";
 import { LoginComponent } from "./auth/login/login.component";
 import { RegisterComponent } from "./auth/register/register.component";
-import { PageNotFoundComponent } from "./pages/page-not-found/page-not-found.component";
 import { TokenInterceptor } from "./interceptors/token-interceptor";
-import { provideRouter } from "@angular/router";
 import { AuthGuard } from "./guard/guard";
+import { APIInterceptor } from "./interceptors/api-interceptor";
 registerLocaleData(zh);
 
 @NgModule({
@@ -189,6 +188,7 @@ registerLocaleData(zh);
   ],
   providers: [
     { provide: NZ_I18N, useValue: zh_CN },
+    { provide: HTTP_INTERCEPTORS, useClass: APIInterceptor, multi: true},
     { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true},
     AuthGuard
   ],
