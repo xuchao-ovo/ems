@@ -1,12 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-
-interface ItemData {
-  id: string;
-  name: string;
-  month: number;
-  attendance_day_num: number;
-}
+import { AttendanceService } from '../service/attendance.service';
+import { firstValueFrom } from 'rxjs';
+import { IAttendance } from '../interface/attendance.interface';
 
 @Component({
   selector: 'app-attendance-list',
@@ -14,13 +10,24 @@ interface ItemData {
   styleUrls: ['./attendance-list.component.css'],
 })
 export class AttendanceListComponent implements OnInit {
-  listOfData: ItemData[] = [];
-  editCache: { [key: string]: { edit: boolean; data: ItemData } } = {};
+  listOfData: IAttendance[] = [];
+  editCache: { [key: string]: { edit: boolean; data: IAttendance } } = {};
   validateForm!: FormGroup;
+  isVisible = false;
+  date = null;
+  constructor(
+    private fb: FormBuilder,
+    private attendanceService: AttendanceService
+  ) {}
+  openModal(){
+    this.isVisible = true;
+  }
 
-  constructor(private fb: FormBuilder) {}
-
-  ngOnInit(): void {
+  handleOk(){
+    
+  }
+  async ngOnInit() {
+    this.listOfData = (await firstValueFrom(this.attendanceService.get_employee()))
     this.validateForm = this.fb.group({
       name: [null, []],
       month: [null, []],
@@ -28,17 +35,24 @@ export class AttendanceListComponent implements OnInit {
       more: [null, []],
     });
 
-    for (let i = 0; i < 100; i++) {
-      this.listOfData.push({
-        id: Math.round(Math.random() * 10000 + 1).toString(),
-        name: `Pang ${i}`,
-        month: Math.round(Math.random() * 12 + 1),
-        attendance_day_num: Math.round(Math.random() * 30 + 1),
-      });
-    }
+    // for (let i = 0; i < 100; i++) {
+    //   this.listOfData.push({
+    //     id: Math.round(Math.random() * 10000 + 1).toString(),
+    //     name: `Pang ${i}`,
+    //     month: Math.round(Math.random() * 12 + 1),
+    //     attendance_day_num: Math.round(Math.random() * 30 + 1),
+    //   });
+    // }
     this.updateEditCache();
   }
-
+  onChange(result: Date[]): void {
+    console.log('onChange: ', result);
+  }
+  deleteItem(id: string){
+    this.attendanceService.delete_employee(id).subscribe(res => {
+      // 刷新列表数据
+    })
+  }
   submitForm(): void {
     if (this.validateForm.valid) {
       console.log('submit', this.validateForm.value);

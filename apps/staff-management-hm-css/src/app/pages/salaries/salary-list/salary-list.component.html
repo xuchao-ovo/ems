@@ -1,33 +1,25 @@
-<form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()">
-  <nz-form-item>
-    <nz-form-label [nzSpan]="5" nzFor="name">名字</nz-form-label>
-    <nz-form-control [nzSpan]="12" nzErrorTip="请输入员工姓名">
-      <input id="name" type="text" nz-input formControlName="name" />
-    </nz-form-control>
-  </nz-form-item>
-  <nz-form-item>
-    <nz-form-label [nzSpan]="7" nzFor="month">月份</nz-form-label>
-    <nz-form-control [nzSpan]="12" nzErrorTip="请选择月份">
-      <nz-select
-        id="month"
-        formControlName="month"
-        nzPlaceHolder="选择一个月份"
-        (ngModelChange)="genderChange($event)"
-      >
-        <nz-option
-          *ngFor="let i of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]"
-          nzValue="{{ i }}"
-          nzLabel="{{ i }}月"
-        ></nz-option>
-      </nz-select>
-    </nz-form-control>
-  </nz-form-item>
-  <nz-form-item>
-    <nz-form-control [nzSpan]="12" [nzOffset]="5">
-      <button nz-button nzType="primary">搜索</button>
-    </nz-form-control>
-  </nz-form-item>
-</form>
+<nz-collapse>
+  <nz-collapse-panel
+    [nzHeader]="'选项'"
+    [nzActive]="true"
+  >
+  <form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()">
+    <nz-form-item>
+      <nz-form-label [nzSpan]="5" nzFor="name">名字</nz-form-label>
+      <nz-form-control [nzSpan]="12" nzErrorTip="请选择要查看的月份">
+        <input id="name" type="text" nz-input formControlName="name" />
+      </nz-form-control>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-control [nzSpan]="12" [nzOffset]="10">
+        <!-- <button nz-button nzType="primary">搜索</button> -->
+        <button nz-button nzType="primary">搜索</button> &nbsp;&nbsp;
+        <button nz-button nzType="default" (click)="openModal()">添加工资记录</button>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+  </nz-collapse-panel>
+</nz-collapse>
 <nz-table
   #fixedTable
   [nzData]="listOfData"
@@ -37,8 +29,11 @@
     <tr>
       <th nzLeft>id</th>
       <th nzLeft>员工</th>
-      <th nzLeft>月份</th>
-      <th nzLeft>工资</th>
+      <th nzLeft>发放日期</th>
+      <th nzLeft>基础工资</th>
+      <th nzLeft>奖金</th>
+      <th nzLeft>扣款</th>
+      <th nzLeft>总工资</th>
       <th nzRight>操作</th>
     </tr>
   </thead>
@@ -54,10 +49,16 @@
         "
       >
         <td nzLeft>{{ data.id }}</td>
-        <td nzLeft>{{ data.name }}</td>
-        <td nzLeft>{{ data.month }}</td>
-        <td>{{ data.salary }}</td>
-        <td><a (click)="startEdit(data.id)">编辑</a></td>
+        <td nzLeft>{{ data.employee_id }}</td>
+        <td nzLeft>{{ data.salary_month }}</td>
+        <td>{{ data.base_salary }}</td>
+        <td>{{ data.bonus }}</td>
+        <td>{{ data.deduction }}</td>
+        <td>{{ data.total_salary }}</td>
+        <td>
+          <nz-tag [nzColor]="'#2db7f5'"><a (click)="startEdit(data.id)">编辑</a></nz-tag>
+          <nz-tag [nzColor]="'#f50'"><a (click)="deleteItem(data.id)">删除</a></nz-tag>
+        </td>
       </ng-container>
       <ng-template #editTemplate>
         <td>
@@ -71,33 +72,60 @@
           <input
             type="text"
             nz-input
-            [(ngModel)]="editCache[data.id].data.name"
+            [(ngModel)]="editCache[data.id].data.employee_id"
           />
         </td>
         <td>
           <input
             type="text"
             nz-input
-            [(ngModel)]="editCache[data.id].data.month"
+            [(ngModel)]="editCache[data.id].data.salary_month"
           />
         </td>
         <td>
           <input
             type="text"
             nz-input
-            [(ngModel)]="editCache[data.id].data.salary"
+            [(ngModel)]="editCache[data.id].data.base_salary"
           />
         </td>
         <td>
-          <a (click)="saveEdit(data.id)" class="save">保存</a>
-          <a
+          <input
+            type="text"
+            nz-input
+            [(ngModel)]="editCache[data.id].data.bonus"
+          />
+        </td>
+        <td>
+          <input
+            type="text"
+            nz-input
+            [(ngModel)]="editCache[data.id].data.deduction"
+          />
+        </td>
+        <td>
+          <input
+            type="text"
+            nz-input
+            [(ngModel)]="editCache[data.id].data.total_salary"
+          />
+        </td>
+        <td>
+          <nz-tag [nzColor]="'#2db7f5'"><a (click)="saveEdit(data.id)" class="save">保存</a></nz-tag>
+          <nz-tag [nzColor]="'#f50'"><a
             nz-popconfirm
             nzPopconfirmTitle="确定取消?"
             (nzOnConfirm)="cancelEdit(data.id)"
-            >取消</a
-          >
+            >取消</a></nz-tag>
         </td>
       </ng-template>
     </tr>
   </tbody>
 </nz-table>
+<nz-modal [(nzVisible)]="isVisible" nzTitle="添加考勤记录" (nzOnOk)="handleOk()">
+  <ng-container *nzModalContent>
+    <p>Content one</p>
+    <p>Content two</p>
+    <p>Content three</p>
+  </ng-container>
+</nz-modal>

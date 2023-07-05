@@ -28,10 +28,9 @@ export class DepartmentService {
   }
 
   async findOne(id: string): Promise<Department | null>{
-    const department: Department =await this.em.findOneOrFail(Department, {
+    return await this.em.findOneOrFail(Department, {
       id: id,
     });
-    return department?department:null;
   }
 
   async update(id: string, updateDepartmentDto: DepartmentDto, operatorId: string) {
