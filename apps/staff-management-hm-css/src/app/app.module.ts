@@ -93,6 +93,7 @@ import { RegisterComponent } from "./auth/register/register.component";
 import { TokenInterceptor } from "./interceptors/token-interceptor";
 import { AuthGuard } from "./guard/guard";
 import { APIInterceptor } from "./interceptors/api-interceptor";
+import { AlterPasswordComponent } from "./pages/users/alter-password.component";
 registerLocaleData(zh);
 
 @NgModule({
@@ -100,7 +101,8 @@ registerLocaleData(zh);
     AppComponent,
     HomeComponent,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+    AlterPasswordComponent
   ],
   imports: [
     BrowserModule,

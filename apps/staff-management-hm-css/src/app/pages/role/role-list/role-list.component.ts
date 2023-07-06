@@ -33,7 +33,7 @@ export class RoleListComponent {
       less: ['', []],
       more: ['', []],
     });
-    this.listOfData = (await firstValueFrom(this.roleService.get_employee()))
+    this.listOfData = (await firstValueFrom(this.roleService.get_role()))
 
 
     // for (let i = 0; i < 100; i++) {
@@ -50,7 +50,7 @@ export class RoleListComponent {
     console.log('onChange: ', result);
   }
   deleteItem(id: string){
-    this.roleService.delete_employee(id).subscribe(res => {
+    this.roleService.delete_role(id).subscribe(res => {
       // 刷新列表数据
     })
   }

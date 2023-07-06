@@ -13,23 +13,23 @@ export class AttendanceService {
     private api: string = `/api/attendances`;
     constructor(private http: HttpClient) { }
 
-    get_employee() {
+    get_attendance() {
         return this.http.get<IAttendance[]>(this.api);
     }
 
-    get_employee_id(id: string): Observable<IAttendance | response_error> {
+    get_attendance_id(id: string): Observable<IAttendance | response_error> {
         return this.http.get<IAttendance | response_error>(`${this.api}/${id}`);
     }
 
-    post_employee(date: IAttendance){
+    post_attendance(date: IAttendance){
         return this.http.post<IAttendance | response_error>(this.api, date);
     }
 
-    patch_employee(id: string, data: IAttendance){
+    patch_attendance(id: string, data: IAttendance){
         return this.http.patch<IAttendance| response_error>(`${this.api}/${id}`, data);
     }
 
-    delete_employee(id: string){
+    delete_attendance(id: string){
         return this.http.get<number | response_error>(`${this.api}/${id}`);
     }
 

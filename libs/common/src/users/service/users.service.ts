@@ -34,18 +34,21 @@ export class UsersService {
     return user?user:null;
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto, operatorId: string) {
+  async update(updateUserDto: UpdateUserDto, operatorId: string) {
     
     try {
       const toModifyUser: User =await this.em.findOneOrFail(User, {
-        username: updateUserDto.username,
-        password: updateUserDto.password
+        id: operatorId
       })
+      if(updateUserDto.new_password != updateUserDto.re_password){
+        return {code: 404, message: '信息提交错误，异常的客户端'};
+      }
       const cryptedPassword = await new mcrypto().encrypt(updateUserDto.new_password)
       toModifyUser.password = cryptedPassword;
       toModifyUser.updated_at = new Date();
       toModifyUser.updated_by = operatorId;
-      return this.em.upsert(User, toModifyUser);
+      this.em.upsert(User, toModifyUser);
+      return {code: 200, message: '密码修改完成'};
     } catch (e) {
       return {code: 404, message: '用户未找到'}
     }

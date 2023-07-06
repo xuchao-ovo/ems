@@ -27,7 +27,7 @@ export class AttendanceListComponent implements OnInit {
     
   }
   async ngOnInit() {
-    this.listOfData = (await firstValueFrom(this.attendanceService.get_employee()))
+    this.listOfData = (await firstValueFrom(this.attendanceService.get_attendance()))
     this.validateForm = this.fb.group({
       name: [null, []],
       month: [null, []],
@@ -49,7 +49,7 @@ export class AttendanceListComponent implements OnInit {
     console.log('onChange: ', result);
   }
   deleteItem(id: string){
-    this.attendanceService.delete_employee(id).subscribe(res => {
+    this.attendanceService.delete_attendance(id).subscribe(res => {
       // 刷新列表数据
     })
   }

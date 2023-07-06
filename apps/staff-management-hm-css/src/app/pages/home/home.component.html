@@ -24,6 +24,12 @@
           <li nz-menu-item nzMatchRouter>
             <a routerLink="/Home/welcome">欢迎</a>
           </li>
+          <li nz-menu-item nzMatchRouter>
+            <a routerLink="/Home/users/alter-password">修改密码</a>
+          </li>
+          <li nz-menu-item nzMatchRouter>
+            <a (click)="logout()">退出登陆</a>
+          </li>
         </ul>
       </li>
       <li nz-submenu nzTitle="员工" nzIcon="group">
@@ -76,7 +82,7 @@
           </li>
         </ul>
       </li>
-      <li nz-submenu nzTitle="权限" nzIcon="appstore">
+      <!-- <li nz-submenu nzTitle="权限" nzIcon="appstore">
         <ul>
           <li nz-menu-item nzMatchRouter>
             <a routerLink="/Home/Attendance/attendance-list">权限管理</a>
@@ -89,14 +95,9 @@
       </li>
       <li nz-submenu nzTitle="用户" nzIcon="dashboard">
         <ul>
-          <li nz-menu-item nzMatchRouter>
-            <a routerLink="/Home/Attendance/attendance-list">修改密码</a>
-          </li>
-          <li nz-menu-item nzMatchRouter>
-            <a routerLink="/Home/Attendance/attendance-list">退出登陆</a>
-          </li>
+          
         </ul>
-      </li>
+      </li> -->
     </ul>
   </nz-sider>
   <nz-layout>

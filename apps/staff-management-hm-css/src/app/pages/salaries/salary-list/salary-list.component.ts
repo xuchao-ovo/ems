@@ -27,7 +27,7 @@ export class SalaryListComponent {
     
   }
   async ngOnInit() {
-    this.listOfData = (await firstValueFrom(this.salaryService.get_employee()))
+    this.listOfData = (await firstValueFrom(this.salaryService.get_salary()))
 
     this.validateForm = this.fb.group({
       name: [null, []],
@@ -47,7 +47,7 @@ export class SalaryListComponent {
     this.updateEditCache();
   }
   deleteItem(id: string){
-    this.salaryService.delete_employee(id).subscribe(res => {
+    this.salaryService.delete_salary(id).subscribe(res => {
       // 刷新列表数据
     })
   }

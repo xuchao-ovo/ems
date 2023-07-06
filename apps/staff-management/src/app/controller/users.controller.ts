@@ -15,6 +15,7 @@ import { AuthGuard, OperetorId, UpdateUserDto, UserDto, UsersService } from 'com
 
 @ApiTags('users')
 @Controller('users')
+@UseGuards(AuthGuard)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
@@ -24,7 +25,6 @@ export class UsersController {
   }
 
   @Get()
-  @UseGuards(AuthGuard)
   findAll() {
     return this.usersService.findAll();
   }
@@ -34,9 +34,9 @@ export class UsersController {
     return this.usersService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto, @OperetorId() operatorId: string) {
-    return this.usersService.update(id, updateUserDto, operatorId);
+  @Patch()
+  update(@Body() updateUserDto: UpdateUserDto, @OperetorId() operatorId: string) {
+    return this.usersService.update(updateUserDto, operatorId);
   }
 
   @Delete(':id')

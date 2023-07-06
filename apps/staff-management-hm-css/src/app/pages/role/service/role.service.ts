@@ -13,23 +13,23 @@ export class RoleService {
     private api: string = `/api/roles`;
     constructor(private http: HttpClient) { }
 
-    get_employee() {
+    get_role() {
         return this.http.get<IRoles[]>(this.api);
     }
 
-    get_employee_id(id: string): Observable<IRoles | response_error> {
+    get_role_id(id: string): Observable<IRoles | response_error> {
         return this.http.get<IRoles | response_error>(`${this.api}/${id}`);
     }
 
-    post_employee(date: IRoles){
+    post_role(date: IRoles){
         return this.http.post<IRoles | response_error>(this.api, date);
     }
 
-    patch_employee(id: string, data: IRoles){
+    patch_role(id: string, data: IRoles){
         return this.http.patch<IRoles| response_error>(`${this.api}/${id}`, data);
     }
 
-    delete_employee(id: string){
+    delete_role(id: string){
         return this.http.get<number | response_error>(`${this.api}/${id}`);
     }
 

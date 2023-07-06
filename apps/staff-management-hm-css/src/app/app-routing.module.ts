@@ -6,10 +6,11 @@ import { LoginComponent } from './auth/login/login.component'
 import { RegisterComponent } from './auth/register/register.component';
 import { PageNotFoundComponent } from './pages/page-not-found/page-not-found.component';
 import { AuthGuard } from './guard/guard'
+import { AlterPasswordComponent } from './pages/users/alter-password.component';
 
 const routes: Routes = [
   // 默认打开面板界面（这个要验证是否登陆）
-  { path: '', pathMatch: 'full', redirectTo: '/Home' },
+  { path: '', pathMatch: 'full', redirectTo: '/Home/welcome' },
   {
     path: 'Login', component: LoginComponent
   },
@@ -70,8 +71,17 @@ const routes: Routes = [
           ),
       },
       {
+        path: 'users',
+        children: [
+          {
+            path: 'alter-password',
+            component: AlterPasswordComponent
+          }
+        ]
+      },
+      {
         path: '**',
-        component: PageNotFoundComponent
+        redirectTo: '/Home/welcome'
       },
     ],
   },

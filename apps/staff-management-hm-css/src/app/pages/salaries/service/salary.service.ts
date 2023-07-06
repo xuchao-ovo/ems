@@ -13,23 +13,23 @@ export class SalaryService {
     private api: string = `/api/salaries`;
     constructor(private http: HttpClient) { }
 
-    get_employee() {
+    get_salary() {
         return this.http.get<ISalary[]>(this.api);
     }
 
-    get_employee_id(id: string): Observable<ISalary | response_error> {
+    get_salary_id(id: string): Observable<ISalary | response_error> {
         return this.http.get<ISalary | response_error>(`${this.api}/${id}`);
     }
 
-    post_employee(date: ISalary){
+    post_salary(date: ISalary){
         return this.http.post<ISalary | response_error>(this.api, date);
     }
 
-    patch_employee(id: string, data: ISalary){
+    patch_salary(id: string, data: ISalary){
         return this.http.patch<ISalary| response_error>(`${this.api}/${id}`, data);
     }
 
-    delete_employee(id: string){
+    delete_salary(id: string){
         return this.http.get<number | response_error>(`${this.api}/${id}`);
     }
 

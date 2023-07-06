@@ -7,4 +7,9 @@ import { Component } from '@angular/core';
 })
 export class HomeComponent {
   isCollapsed = false;
+
+  logout(){
+    localStorage.clear();
+    location.reload();
+  }
 }
