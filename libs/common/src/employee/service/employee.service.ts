@@ -9,6 +9,7 @@ import { QBFilterQuery } from '@mikro-orm/core';
 import { UsersService } from '../../users/service/users.service';
 import { mcrypto } from '../../utils';
 import { randomUUID } from 'crypto';
+import { User } from '../../users/entities/user.entity';
 
 
 @Injectable()
@@ -72,11 +73,15 @@ export class EmployeeService {
   }
 
   async remove(id: string) {
+    // 删除员工时将与之联系的账号也一并删除
     try {
-      const employ: Employee =await this.em.findOneOrFail(Employee, {
+      const employee: Employee =await this.em.findOneOrFail(Employee, {
         id: id
       })
-      return this.em.remove(employ).flush();
+      const employee_user =  await this.em.findOneOrFail(User, {id: employee.user_id});
+      await this.em.remove(employee).flush();
+      await this.em.remove(employee_user).flush();
+      return { code: 200, id: employee_user.id };
     } catch (e) {
       return {code: 404, message: '未找到'}
     }

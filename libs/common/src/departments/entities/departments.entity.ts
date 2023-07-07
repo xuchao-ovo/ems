@@ -11,8 +11,8 @@ export class Department {
     @Property()
     description?: string;
 
-    @Property()
-    parent_id?: string;
+    @Property({nullable: true})
+    parent_id?: string | null;
     @Property()
     created_by?: string;
 

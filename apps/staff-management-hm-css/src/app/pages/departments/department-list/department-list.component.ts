@@ -1,12 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { IDepartments } from '../interface/departments.interface';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { DepartmentService } from '../service/department.service';
+import { firstValueFrom } from 'rxjs';
 
-interface ItemData {
-  id: string;
-  name: string;
-  month: number;
-  attendance_day_num: number;
-}
 
 @Component({
   selector: 'app-department-list',
@@ -14,29 +12,79 @@ interface ItemData {
   styleUrls: ['./department-list.component.css'],
 })
 export class DepartmentListComponent {
-  listOfData: ItemData[] = [];
-  editCache: { [key: string]: { edit: boolean; data: ItemData } } = {};
+  listOfData: IDepartments[] = [];
+  editCache: { [key: string]: { edit: boolean; data: IDepartments } } = {};
   validateForm!: FormGroup;
+  validateAddForm!: FormGroup;
+  isVisible = false;
 
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private fb: FormBuilder,
+    private notification: NzNotificationService,
+    private departmentService: DepartmentService
+  ) {}
+  openModal(){
+    this.isVisible = true;
+  }
 
-  ngOnInit(): void {
+  handleOk(){
+    if (this.validateAddForm.valid) {
+      const role_data: IDepartments =  {
+        ...this.validateAddForm.value
+      };
+      console.log('submit', role_data);
+      this.departmentService.post_department(role_data).subscribe(res => {
+        this.refresh_data();
+      })
+    } else {
+      Object.values(this.validateAddForm.controls).forEach((control) => {
+        if (control.invalid) {
+          control.markAsDirty();
+          control.updateValueAndValidity({ onlySelf: true });
+        }
+      });
+    }
+    this.isVisible = false;
+  }
+
+  async ngOnInit() {
     this.validateForm = this.fb.group({
       name: [null, []],
       month: [null, []],
       less: [null, []],
       more: [null, []],
     });
-
-    for (let i = 0; i < 100; i++) {
-      this.listOfData.push({
-        id: Math.round(Math.random() * 10000 + 1).toString(),
-        name: `Pang ${i}`,
-        month: Math.round(Math.random() * 12 + 1),
-        attendance_day_num: Math.round(Math.random() * 30 + 1),
-      });
-    }
+    this.validateAddForm = this.fb.group({
+      name: ['', []],
+      description: ['', []],
+    });
+    this.listOfData = (await firstValueFrom(this.departmentService.get_department()))
     this.updateEditCache();
+  }
+  onChange(result: Date[]): void {
+    console.log('onChange: ', result);
+  }
+  refresh_data(){
+    this.departmentService.get_department().subscribe(res => {
+      this.listOfData = res;
+      this.updateEditCache();
+      this.notification.create(
+        'success',
+        '通知',
+        '操作成功。'
+      );
+    })
+  }
+  handleCancel(): void {
+    console.log('Button cancel clicked!');
+    this.isVisible = false;
+  }
+
+  deleteItem(id: string){
+    this.departmentService.delete_department(id).subscribe(res => {
+      // 刷新列表数据
+      this.refresh_data();
+    })
   }
 
   submitForm(): void {
@@ -74,6 +122,7 @@ export class DepartmentListComponent {
   saveEdit(id: string): void {
     const index = this.listOfData.findIndex((item) => item.id === id);
     Object.assign(this.listOfData[index], this.editCache[id].data);
+    this.departmentService.patch_department(id, this.editCache[id].data).subscribe(res => this.refresh_data());
     this.editCache[id].edit = false;
   }
 

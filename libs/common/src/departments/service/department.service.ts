@@ -4,6 +4,8 @@ import { EntityManager } from '@mikro-orm/postgresql';
 import { Department } from '../entities/departments.entity';
 import { DepartmentDto } from '../dto/department.dto';
 import { instanceToPlain } from 'class-transformer';
+import { IDepartments_tree, TreeNode } from '../inerfacee/departments.interface';
+import { randomUUID } from 'crypto';
 
 
 
@@ -12,19 +14,33 @@ export class DepartmentService {
 
   async create(createDepartmentDto: DepartmentDto, operatorId: string) {
     this.em.create(Department, {
+      id: randomUUID(),
       name: createDepartmentDto.name,
       description: createDepartmentDto.description,
-      parent_id: createDepartmentDto.parentId,
+      parent_id: null,
       created_at: new Date(),
-      created_by: '',
-      updated_at: null,
-      updated_by: ''
+      created_by: operatorId
     });
     return this.em.flush();
   }
 
   async findAll() {
-    return await this.em.find(Department, {});
+    const departments: Department[] = await this.em.find(Department, {parent_id: null});
+    return departments;
+  }
+
+  arrayToTree<T extends TreeNode<string>>(array: T[], parent_id: string){
+    let result: T[] = [];
+    array.forEach(item => {
+      if (item.parent_id == parent_id) {
+        let children: T[] = this.arrayToTree(array, item.parent_id);
+        if(children.length > 0){
+          item.children = children;
+        }
+        result.push(item);
+      }
+    });
+    return result;
   }
 
   async findOne(id: string): Promise<Department | null>{
@@ -39,14 +55,14 @@ export class DepartmentService {
         id: updateDepartmentDto.id
       })
       const mod_department = instanceToPlain(updateDepartmentDto) as Department;
-      toModifyDepartment = {
-        ...mod_department,
-        updated_at: new Date(),
-        updated_by: operatorId
-      }
-      return await this.em.upsert(Department, updateDepartmentDto);
+      toModifyDepartment.description = mod_department.description;
+      toModifyDepartment.name = mod_department.name;
+      toModifyDepartment.updated_at = new Date();
+      toModifyDepartment.updated_by = operatorId;
+      await this.em.persistAndFlush(toModifyDepartment);
+      return { code: 200, id: toModifyDepartment.id };
     } catch (e) {
-      return await {code: 404, message: '未找到'}
+      return { code: 404, message: '未找到' }
     }
   }
 
