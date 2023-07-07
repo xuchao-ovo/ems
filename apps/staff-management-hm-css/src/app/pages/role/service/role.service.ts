@@ -30,7 +30,7 @@ export class RoleService {
     }
 
     delete_role(id: string){
-        return this.http.get<number | response_error>(`${this.api}/${id}`);
+        return this.http.delete<number | response_error>(`${this.api}/${id}`);
     }
 
 }
