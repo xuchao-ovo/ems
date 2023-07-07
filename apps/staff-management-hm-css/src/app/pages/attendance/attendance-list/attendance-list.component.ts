@@ -3,6 +3,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AttendanceService } from '../service/attendance.service';
 import { firstValueFrom } from 'rxjs';
 import { IAttendance } from '../interface/attendance.interface';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
+import { EmployeeService } from '../../employees/service/employee.service';
+import { IEmployee } from '../../employees/interface/employee.interface';
 
 @Component({
   selector: 'app-attendance-list',
@@ -13,36 +16,81 @@ export class AttendanceListComponent implements OnInit {
   listOfData: IAttendance[] = [];
   editCache: { [key: string]: { edit: boolean; data: IAttendance } } = {};
   validateForm!: FormGroup;
+  validateAddForm!: FormGroup;
+  selectedValue = '';
   isVisible = false;
   date = null;
+  users_node!: IEmployee[];
+  time_check_in: Date = new Date(Date.now());
+  time_check_out: Date = new Date(Date.now());
   constructor(
     private fb: FormBuilder,
-    private attendanceService: AttendanceService
+    private attendanceService: AttendanceService,
+    private notification: NzNotificationService,
+    private employeeService: EmployeeService
   ) {}
   openModal(){
     this.isVisible = true;
   }
 
   handleOk(){
-    
+    if (this.validateAddForm.valid) {
+      const attendance_data: IAttendance =  {
+        ...this.validateAddForm.value,
+        check_in: this.time_check_in,
+        check_out: this.time_check_out
+      };
+      console.log('submit', attendance_data);
+      this.attendanceService.post_attendance(attendance_data).subscribe(res => {
+        this.refresh_data();
+      })
+    } else {
+      Object.values(this.validateAddForm.controls).forEach((control) => {
+        if (control.invalid) {
+          control.markAsDirty();
+          control.updateValueAndValidity({ onlySelf: true });
+        }
+      });
+    }
+    this.isVisible = false;
+  }
+  changeTime(time: Date){
+    console.log(time);
+  }
+  handleCancel(): void {
+    console.log('Button cancel clicked!');
+    this.isVisible = false;
+  }
+  refresh_data(){
+    this.attendanceService.get_attendance().subscribe(res => {
+      this.listOfData = res;
+      this.updateEditCache();
+      this.notification.create(
+        'success',
+        '通知',
+        '操作成功。'
+      );
+    })
   }
   async ngOnInit() {
-    this.listOfData = (await firstValueFrom(this.attendanceService.get_attendance()))
     this.validateForm = this.fb.group({
       name: [null, []],
       month: [null, []],
       less: [null, []],
       more: [null, []],
     });
-
-    // for (let i = 0; i < 100; i++) {
-    //   this.listOfData.push({
-    //     id: Math.round(Math.random() * 10000 + 1).toString(),
-    //     name: `Pang ${i}`,
-    //     month: Math.round(Math.random() * 12 + 1),
-    //     attendance_day_num: Math.round(Math.random() * 30 + 1),
-    //   });
-    // }
+    this.validateAddForm = this.fb.group({
+      employee_id: ['', []],
+      date_time: ['', []],
+      check_in: [null, []],
+      check_out: [null, []],
+      leave_reason: ['', []]
+    });
+    
+    // load data
+    this.listOfData = (await firstValueFrom(this.attendanceService.get_attendance()))
+    this.users_node = (await firstValueFrom(this.employeeService.get_employee()))
+    console.log(this.listOfData);
     this.updateEditCache();
   }
   onChange(result: Date[]): void {
@@ -51,6 +99,7 @@ export class AttendanceListComponent implements OnInit {
   deleteItem(id: string){
     this.attendanceService.delete_attendance(id).subscribe(res => {
       // 刷新列表数据
+      this.refresh_data();
     })
   }
   submitForm(): void {

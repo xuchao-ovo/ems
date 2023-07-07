@@ -7,7 +7,7 @@ export class Attendance {
     id!: string;
   
     @Property()
-    empoloyee_id!: string;
+    employee_id!: string;
   
     @Property({fieldName: 'date'})
     date_time!: Date;

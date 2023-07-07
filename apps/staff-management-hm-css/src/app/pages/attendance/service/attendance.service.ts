@@ -30,7 +30,7 @@ export class AttendanceService {
     }
 
     delete_attendance(id: string){
-        return this.http.get<number | response_error>(`${this.api}/${id}`);
+        return this.http.delete<response_error>(`${this.api}/${id}`);
     }
 
 }

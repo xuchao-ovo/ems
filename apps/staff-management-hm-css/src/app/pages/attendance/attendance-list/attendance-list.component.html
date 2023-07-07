@@ -28,6 +28,8 @@
 >
   <thead>
     <tr>
+      <th nzLeft>id</th>
+      <th nzLeft>名字</th>
       <th nzLeft>日期</th>
       <th nzLeft>签到时间</th>
       <th nzLeft>签退时间</th>
@@ -36,70 +38,75 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let data of fixedTable.data">
-      <ng-container *ngIf="!editCache[data.id].edit && listOfData.length < 1">
+    <tr *ngFor="let data of listOfData">
+      <ng-container *ngIf="listOfData.length < 1">
         <nz-empty></nz-empty>
       </ng-container>
-      <ng-container
-        *ngIf="
-          !editCache[data.id].edit && listOfData.length > 0;
-          else editTemplate
-        "
-      >
+      <ng-container>
+        <td nzLeft>{{ data.id }}</td>
+        <td nzLeft>{{ data.name }}</td>
         <td nzLeft>{{ data.date_time }}</td>
         <td nzLeft>{{ data.check_in }}</td>
         <td nzLeft>{{ data.check_out }}</td>
         <td>{{ data.leave_reason }}</td>
         <td>
-          <nz-tag [nzColor]="'#2db7f5'"><a (click)="startEdit(data.id)">编辑</a></nz-tag>
+          <!-- <nz-tag [nzColor]="'#2db7f5'"><a (click)="startEdit(data.id)">编辑</a></nz-tag> -->
           <nz-tag [nzColor]="'#f50'"><a (click)="deleteItem(data.id)">删除</a></nz-tag>
         </td>
       </ng-container>
-      <ng-template #editTemplate>
-        <td>
-          <input
-            type="text"
-            nz-input
-            [(ngModel)]="editCache[data.id].data.date_time"
-          />
-        </td>
-        <td>
-          <input
-            type="text"
-            nz-input
-            [(ngModel)]="editCache[data.id].data.check_in"
-          />
-        </td>
-        <td>
-          <input
-            type="text"
-            nz-input
-            [(ngModel)]="editCache[data.id].data.check_out"
-          />
-        </td>
-        <td>
-          <input
-            type="text"
-            nz-input
-            [(ngModel)]="editCache[data.id].data.leave_reason"
-          />
-        </td>
-        <td>
-          <nz-tag [nzColor]="'#2db7f5'"><a (click)="saveEdit(data.id)" class="save">保存</a></nz-tag>
-          <nz-tag [nzColor]="'#f50'"><a
-            nz-popconfirm
-            nzPopconfirmTitle="确定取消?"
-            (nzOnConfirm)="cancelEdit(data.id)"
-            >取消</a></nz-tag>
-        </td>
-      </ng-template>
     </tr>
   </tbody>
 </nz-table>
-<nz-modal [(nzVisible)]="isVisible" nzTitle="添加考勤记录" (nzOnOk)="handleOk()">
+<nz-modal [(nzVisible)]="isVisible" nzTitle="添加考勤记录" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
   <ng-container *nzModalContent>
-    <p>Content one</p>
-    <p>Content two</p>
-    <p>Content three</p>
+    <form nz-form [formGroup]="validateAddForm">
+      <nz-form-item>
+        <nz-form-label [nzSpan]="5" nzFor="employee_id">员工</nz-form-label>
+        <nz-form-control [nzSpan]="12" nzErrorTip="请选择员工">
+          <nz-select formControlName="employee_id" [(ngModel)]="selectedValue" nzAllowClear nzPlaceHolder="请选择员工" nzShowSearch>
+            <nz-option-group nzLabel="Leader">
+              <div *ngFor="let item of users_node">
+                <nz-option 
+                nzValue="{{ item.id }}" 
+                nzLabel="{{ item.name }}" 
+                *ngIf="item.is_leader"></nz-option>
+              </div>
+            </nz-option-group>
+            <nz-option-group nzLabel="Employee">
+              <div *ngFor="let item of users_node">
+                <nz-option 
+                nzValue="{{ item.id }}" 
+                nzLabel="{{ item.name }}" 
+                *ngIf="!item.is_leader"></nz-option>
+              </div>
+            </nz-option-group>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="5" nzFor="date_time">日期</nz-form-label>
+        <nz-form-control [nzSpan]="12" nzErrorTip="">
+          <nz-date-picker formControlName="date_time"></nz-date-picker>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="5" nzFor="check_in">签到时间</nz-form-label>
+        <nz-form-control [nzSpan]="12" nzErrorTip="">
+          <nz-time-picker formControlName="check_in"  [(ngModel)]="time_check_in" (ngModelChange)="changeTime($event)"></nz-time-picker>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="5" nzFor="check_out">签退时间</nz-form-label>
+        <nz-form-control [nzSpan]="12" nzErrorTip="">
+          <nz-time-picker formControlName="check_out"  [(ngModel)]="time_check_out" (ngModelChange)="changeTime($event)"></nz-time-picker>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="5" nzFor="leave_reason">请假原因</nz-form-label>
+        <nz-form-control [nzSpan]="12" nzErrorTip="">
+          <textarea nz-input formControlName="leave_reason" placeholder="如果没有请假请填写无" [nzAutosize]="{ minRows: 3, maxRows: 5 }"></textarea>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
   </ng-container>
 </nz-modal>

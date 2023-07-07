@@ -27,13 +27,13 @@ export class Employee {
     @Property()
     user_id!: string;
 
-    @Property({nullable: true})
+    @Property({nullable: true, type: 'uuid'})
     created_by!: string | null;
 
     @Property({nullable: true})
     created_at!: Date | null;
 
-    @Property({nullable: true})
+    @Property({nullable: true, type: 'uuid'})
     updated_by!: string | null;
 
     @Property({nullable: true})

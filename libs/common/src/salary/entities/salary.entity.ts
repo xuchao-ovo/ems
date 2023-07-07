@@ -13,7 +13,7 @@ export class Salary {
     salary_month!: Date;
 
     @Property()
-    base_salary!: number;
+    basic_salary!: number;
 
     @Property()
     bonus!: number;

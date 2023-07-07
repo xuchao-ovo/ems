@@ -9,7 +9,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { AuthGuard, EmployeeDto, EmployeeService, OperetorId } from 'common';
+import { AuthGuard, EmployeeDto, EmployeeService, ICreateEmployee, OperetorId } from 'common';
 
 
 
@@ -20,7 +20,7 @@ export class EmployeeController {
   constructor(private readonly employeeService: EmployeeService) {}
 
   @Post()
-  create(@Body() createEmployeeDto: EmployeeDto, @OperetorId()operatorId: string) {
+  create(@Body() createEmployeeDto: ICreateEmployee, @OperetorId()operatorId: string) {
     return this.employeeService.create(createEmployeeDto, operatorId);
   }
 

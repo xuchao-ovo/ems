@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { IEmployee } from '../interface/employee.interface';
+import { ICreateEmployee, IEmployee } from '../interface/employee.interface';
 import { response_error } from '../../../auth/register/register.interface';
 import { Observable } from 'rxjs';
 
@@ -21,7 +21,7 @@ export class EmployeeService {
         return this.http.get<IEmployee | response_error>(`${this.api}/${id}`);
     }
 
-    post_employee(date: IEmployee){
+    post_employee(date: ICreateEmployee){
         return this.http.post<IEmployee | response_error>(this.api, date);
     }
 
@@ -30,7 +30,7 @@ export class EmployeeService {
     }
 
     delete_employee(id: string){
-        return this.http.get<number | response_error>(`${this.api}/${id}`);
+        return this.http.delete<number | response_error>(`${this.api}/${id}`);
     }
 
 }

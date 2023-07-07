@@ -5,7 +5,7 @@ export class AttendanceDto {
     id!: string;
     @Expose({name: 'employee_id'})
     employeeId?: string;
-    @Expose()
+    @Expose({name: 'date_time'})
     date?: Date;
     @Expose({name: 'check_in'})
     checkIn?: Date;

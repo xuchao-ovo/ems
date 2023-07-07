@@ -13,14 +13,13 @@ export class UsersService {
 
   async create(createUserDto: UserDto, operatorId: string) {
     const newUser = instanceToPlain(createUserDto) as User;
-    this.em.create(User, {
+    const user = this.em.create(User, {
       ...newUser,
       created_at: new Date(),
-      created_by: operatorId,
-      updated_at: null,
-      updated_by: ''
+      created_by: operatorId
     });
-    return await this.em.flush();
+    this.em.flush();
+    return user.id;
   }
 
   async findAll()           {

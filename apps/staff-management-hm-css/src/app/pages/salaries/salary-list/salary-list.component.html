@@ -27,8 +27,8 @@
 >
   <thead>
     <tr>
-      <th nzLeft>id</th>
-      <th nzLeft>员工</th>
+      <!-- <th nzLeft>id</th> -->
+      <th nzLeft>姓名</th>
       <th nzLeft>发放日期</th>
       <th nzLeft>基础工资</th>
       <th nzLeft>奖金</th>
@@ -48,13 +48,13 @@
           else editTemplate
         "
       >
-        <td nzLeft>{{ data.id }}</td>
-        <td nzLeft>{{ data.employee_id }}</td>
+        <!-- <td nzLeft>{{ data.id }}</td> -->
+        <td nzLeft>{{ data.name }}</td>
         <td nzLeft>{{ data.salary_month }}</td>
-        <td>{{ data.base_salary }}</td>
-        <td>{{ data.bonus }}</td>
-        <td>{{ data.deduction }}</td>
-        <td>{{ data.total_salary }}</td>
+        <td nzLeft>{{ data.basic_salary }}</td>
+        <td nzLeft>{{ data.bonus }}</td>
+        <td nzLeft>{{ data.deduction }}</td>
+        <td nzLeft>{{ data.total_salary }}</td>
         <td>
           <nz-tag [nzColor]="'#2db7f5'"><a (click)="startEdit(data.id)">编辑</a></nz-tag>
           <nz-tag [nzColor]="'#f50'"><a (click)="deleteItem(data.id)">删除</a></nz-tag>
@@ -65,50 +65,57 @@
           <input
             type="text"
             nz-input
-            [(ngModel)]="editCache[data.id].data.id"
+            [disabled]="true" 
+            [(ngModel)]="editCache[data.id].data.name"
           />
         </td>
         <td>
-          <input
-            type="text"
-            nz-input
-            [(ngModel)]="editCache[data.id].data.employee_id"
-          />
+          <nz-date-picker [(ngModel)]="editCache[data.id].data.salary_month"></nz-date-picker>
         </td>
         <td>
-          <input
-            type="text"
-            nz-input
-            [(ngModel)]="editCache[data.id].data.salary_month"
-          />
+          <nz-input-number
+          [(ngModel)]="editCache[data.id].data.basic_salary"
+            [nzMin]="1"
+            [nzMax]="100000"
+            [nzFormatter]="formatterDollar"
+            [nzParser]="parserDollar"
+            [nzStep]="0.1"
+            [nzPlaceHolder]="'基础工资'"
+          ></nz-input-number>
         </td>
         <td>
-          <input
-            type="text"
-            nz-input
-            [(ngModel)]="editCache[data.id].data.base_salary"
-          />
+          <nz-input-number
+          [(ngModel)]="editCache[data.id].data.bonus"
+            [nzMin]="1"
+            [nzMax]="100000"
+            [nzFormatter]="formatterDollar"
+            [nzParser]="parserDollar"
+            [nzStep]="0.1"
+            [nzPlaceHolder]="'奖金'"
+          ></nz-input-number>
         </td>
         <td>
-          <input
-            type="text"
-            nz-input
-            [(ngModel)]="editCache[data.id].data.bonus"
-          />
+          <nz-input-number
+          [(ngModel)]="editCache[data.id].data.deduction"
+            [nzMin]="1"
+            [nzMax]="100000"
+            [nzFormatter]="formatterDollar"
+            [nzParser]="parserDollar"
+            [nzStep]="0.1"
+            [nzPlaceHolder]="'扣除'"
+          ></nz-input-number>
         </td>
         <td>
-          <input
-            type="text"
-            nz-input
-            [(ngModel)]="editCache[data.id].data.deduction"
-          />
-        </td>
-        <td>
-          <input
-            type="text"
-            nz-input
-            [(ngModel)]="editCache[data.id].data.total_salary"
-          />
+          <nz-input-number
+          [(ngModel)]="editCache[data.id].data.total_salary"
+            [nzMin]="1"
+            [nzMax]="100000"
+            [nzFormatter]="formatterDollar"
+            [nzParser]="parserDollar"
+            [nzStep]="0.1"
+            [disabled]="true" 
+            [nzPlaceHolder]="'总工资'"
+          ></nz-input-number>
         </td>
         <td>
           <nz-tag [nzColor]="'#2db7f5'"><a (click)="saveEdit(data.id)" class="save">保存</a></nz-tag>
@@ -122,10 +129,94 @@
     </tr>
   </tbody>
 </nz-table>
-<nz-modal [(nzVisible)]="isVisible" nzTitle="添加考勤记录" (nzOnOk)="handleOk()">
+<nz-modal [(nzVisible)]="isVisible" nzTitle="添加考勤记录" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
   <ng-container *nzModalContent>
-    <p>Content one</p>
-    <p>Content two</p>
-    <p>Content three</p>
+    <form nz-form [formGroup]="validateAddForm">
+      <nz-form-item>
+        <nz-form-label [nzSpan]="5" nzFor="employee_id">员工</nz-form-label>
+        <nz-form-control [nzSpan]="12" nzErrorTip="请选择员工">
+          <nz-select formControlName="employee_id" [(ngModel)]="selectedValue" nzAllowClear nzPlaceHolder="请选择员工" nzShowSearch>
+            <nz-option-group nzLabel="Leader">
+              <div *ngFor="let item of users_node">
+                <nz-option 
+                nzValue="{{ item.id }}" 
+                nzLabel="{{ item.name }}" 
+                *ngIf="item.is_leader"></nz-option>
+              </div>
+            </nz-option-group>
+            <nz-option-group nzLabel="Employee">
+              <div *ngFor="let item of users_node">
+                <nz-option 
+                nzValue="{{ item.id }}" 
+                nzLabel="{{ item.name }}" 
+                *ngIf="!item.is_leader"></nz-option>
+              </div>
+            </nz-option-group>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="5" nzFor="salary_month">发放日期</nz-form-label>
+        <nz-form-control [nzSpan]="12" nzErrorTip="">
+          <nz-date-picker formControlName="salary_month"></nz-date-picker>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="5" nzFor="basic_salary">基础工资</nz-form-label>
+        <nz-form-control [nzSpan]="12" nzErrorTip="">
+          <nz-input-number
+            formControlName="basic_salary"
+            [nzMin]="1"
+            [nzMax]="100000"
+            [nzFormatter]="formatterDollar"
+            [nzParser]="parserDollar"
+            [nzStep]="0.1"
+            [nzPlaceHolder]="'基础工资'"
+          ></nz-input-number>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="5" nzFor="bonus">奖金</nz-form-label>
+        <nz-form-control [nzSpan]="12" nzErrorTip="">
+          <nz-input-number
+            formControlName="bonus"
+            [nzMin]="1"
+            [nzMax]="100000"
+            [nzFormatter]="formatterDollar"
+            [nzParser]="parserDollar"
+            [nzStep]="0.1"
+            [nzPlaceHolder]="'奖金'"
+          ></nz-input-number>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="5" nzFor="deduction">扣款</nz-form-label>
+        <nz-form-control [nzSpan]="12" nzErrorTip="">
+          <nz-input-number
+          formControlName="deduction"
+            [nzMin]="1"
+            [nzMax]="100000"
+            [nzFormatter]="formatterDollar"
+            [nzParser]="parserDollar"
+            [nzStep]="0.1"
+            [nzPlaceHolder]="'扣款'"
+          ></nz-input-number>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="5" nzFor="total_salary">总工资</nz-form-label>
+        <nz-form-control [nzSpan]="12" nzErrorTip="">
+          <nz-input-number
+          formControlName="total_salary"
+            [nzMin]="1"
+            [nzMax]="100000"
+            [nzFormatter]="formatterDollar"
+            [nzParser]="parserDollar"
+            [nzStep]="0.1"
+            [nzPlaceHolder]="'总工资'"
+          ></nz-input-number>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
   </ng-container>
 </nz-modal>

@@ -11,7 +11,7 @@ export class User {
     @Property()
     password!: string;
     
-    @Property({nullable: true})
+    @Property({nullable: true, type: 'uuid'})
 
     created_by!: string | null;
 
@@ -19,7 +19,7 @@ export class User {
 
     created_at!: Date | null;
 
-    @Property({nullable: true})
+    @Property({nullable: true, type: 'uuid'})
     updated_by!: string | null;
 
     @Property({nullable: true})
