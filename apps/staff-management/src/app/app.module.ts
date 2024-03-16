@@ -42,10 +42,10 @@ import { SalaryController } from "./controller/salary.controller";
       ],
       dbName: "postgres",
       type: "postgresql",
-      host: "16.tcp.cpolar.top",
+      host: "localhost",
       user: "postgres",
       password: "123456",
-      port: 11856,
+      port: 5432,
     }),
   ],
   controllers: [
