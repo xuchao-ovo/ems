@@ -1,63 +1,90 @@
 <nz-collapse>
-  <nz-collapse-panel
-    [nzHeader]="'选项'"
-    [nzActive]="true"
-  >
-  <form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()">
-    <nz-form-item>
-      <nz-form-label [nzSpan]="5" nzFor="name">名字</nz-form-label>
-      <nz-form-control [nzSpan]="12" nzErrorTip="请输入员工姓名">
-        <input id="name" type="text" nz-input formControlName="name" />
-      </nz-form-control>
-    </nz-form-item>
-    <nz-form-item>
-      <nz-form-label [nzSpan]="5" nzFor="position">职位</nz-form-label>
-      <nz-form-control [nzSpan]="12" nzErrorTip="请选择职位">
-        <nz-select
-          id="position"
-          formControlName="position"
-          nzPlaceHolder="选择筛选职位"
-          (ngModelChange)="genderChange($event)"
-        >
-          <nz-option
-            *ngFor="let i of ['全栈工程师', '前端工程师', '后端工程师']"
-            nzValue="{{ i }}"
-            nzLabel="{{ i }}"
-          ></nz-option>
-        </nz-select>
-      </nz-form-control>
-    </nz-form-item>
-    <nz-form-item>
-      <nz-form-label [nzSpan]="5" nzFor="gender">性别</nz-form-label>
-      <nz-form-control [nzSpan]="12" nzErrorTip="请选择性别">
-        <label nz-checkbox>男</label> 
-        <label nz-checkbox>女</label> 
-      </nz-form-control>
-    </nz-form-item>
-    <nz-form-item>
-      <nz-form-label [nzSpan]="5" nzFor="less">年龄</nz-form-label>
-      <nz-form-control [nzSpan]="12" nzErrorTip="年龄范围">
-        <!-- <input id="less" type="text" nz-input formControlName="less" /> -->
-        <nz-slider id="less" nzRange formControlName="less" [nzDisabled]="false"></nz-slider>
-      </nz-form-control>
-    </nz-form-item>
-    <nz-form-item>
-      <nz-form-label [nzSpan]="5" nzFor="more">是否领导</nz-form-label>
-      <nz-form-control [nzSpan]="12" nzErrorTip="是否领导">
-        <nz-switch id="more"  formControlName="more" nzCheckedChildren="是" nzUnCheckedChildren="否"></nz-switch>
-      </nz-form-control>
-    </nz-form-item>
-    <nz-form-item>
-      <nz-form-control [nzSpan]="12" [nzOffset]="10">
-        <!-- <button nz-button nzType="primary">搜索</button> -->
-        <button nz-button nzType="primary">搜索</button> &nbsp;&nbsp;
-        <button nz-button nzType="default" (click)="openModal()">添加员工</button>
-      </nz-form-control>
-    </nz-form-item>
-  </form>
+  <nz-collapse-panel [nzHeader]="'选项'" [nzActive]="true">
+    <form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()">
+      <nz-form-item>
+        <nz-form-label [nzSpan]="5" nzFor="name">名字</nz-form-label>
+        <nz-form-control [nzSpan]="12" nzErrorTip="请输入员工姓名">
+          <input id="name" type="text" nz-input formControlName="name" />
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="5" nzFor="position">职位</nz-form-label>
+        <nz-form-control [nzSpan]="12" nzErrorTip="请选择职位">
+          <nz-select
+            id="position"
+            formControlName="position"
+            nzPlaceHolder="选择筛选职位"
+            (ngModelChange)="genderChange($event)"
+            nzAllowClear
+          >
+            <nz-option
+              *ngFor="
+                let i of ['财务主管', '全栈工程师', '前端工程师', '后端工程师']
+              "
+              [nzValue]="i"
+              [nzLabel]="i"
+            ></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="5" nzFor="gender">性别</nz-form-label>
+        <nz-form-control [nzSpan]="12" nzErrorTip="请选择性别">
+          <label nz-checkbox>男</label>
+          <label nz-checkbox>女</label>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="5" nzFor="less">年龄</nz-form-label>
+        <nz-form-control [nzSpan]="12" nzErrorTip="年龄范围">
+          <!-- <input id="less" type="text" nz-input formControlName="less" /> -->
+          <nz-slider
+            id="less"
+            nzRange
+            formControlName="less"
+            [nzDisabled]="false"
+          ></nz-slider>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-label [nzSpan]="5" nzFor="more">是否领导</nz-form-label>
+        <nz-form-control [nzSpan]="12" nzErrorTip="是否领导">
+          <nz-switch
+            id="more"
+            formControlName="more"
+            nzCheckedChildren="是"
+            nzUnCheckedChildren="否"
+          ></nz-switch>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control [nzSpan]="12" [nzOffset]="10">
+          <!-- <button nz-button nzType="primary">搜索</button> -->
+          <button nz-button nzType="primary" (click)="search()">搜索</button>
+          &nbsp;&nbsp;
+          <button nz-button nzType="default" (click)="openModal()">
+            添加员工
+          </button>
+          &nbsp;&nbsp;
+          <button nz-button nzType="default" (click)="display()">
+            图表展示
+          </button>
+        </nz-form-control>
+        <!-- <div *ngIf="displayChart"> -->
+        <canvas
+          *ngIf="displayChart"
+          id="agePieChart"
+          width="10"
+          height="5"
+        ></canvas>
+        <button nz-button nzType="default" (click)="closeChart()">
+          关闭饼图
+        </button>
+        <!-- </div> -->
+      </nz-form-item>
+    </form>
   </nz-collapse-panel>
 </nz-collapse>
-
 
 <nz-table
   #fixedTable
@@ -77,28 +104,26 @@
   </thead>
   <tbody>
     <tr *ngFor="let data of fixedTable.data">
-      <ng-container
-        *ngIf="
-          !editCache[data.id].edit;
-          else editTemplate
-        "
-      >
-      <td nzLeft>{{ data.name }}</td>
-      <td nzLeft>{{ data.department_name }}</td>
+      <ng-container *ngIf="!editCache[data.id].edit; else editTemplate">
+        <td nzLeft>{{ data.name }}</td>
+        <td nzLeft>{{ data.department_name }}</td>
         <td nzLeft>{{ data.age }}</td>
-        <td nzLeft>{{ data.gender=='M'?'男':'女' }}</td>
-        <td nzLeft>{{ data.is_leader?'是':'否' }}</td>
-       
+        <td nzLeft>{{ data.gender == "M" ? "男" : "女" }}</td>
+        <td nzLeft>{{ data.is_leader ? "是" : "否" }}</td>
+
         <td nzLeft>
           <nz-tag [nzColor]="'#87d068'">{{ data.position }}</nz-tag>
         </td>
         <td>
-          <nz-tag [nzColor]="'#2db7f5'"><a (click)="startEdit(data.id)">编辑</a></nz-tag>
-          <nz-tag [nzColor]="'#f50'"><a (click)="deleteItem(data.id)">删除</a></nz-tag>
+          <nz-tag [nzColor]="'#2db7f5'"
+            ><a (click)="startEdit(data.id)">编辑</a></nz-tag
+          >
+          <nz-tag [nzColor]="'#f50'"
+            ><a (click)="deleteItem(data.id)">删除</a></nz-tag
+          >
         </td>
       </ng-container>
       <ng-template #editTemplate>
-        
         <td>
           <input
             type="text"
@@ -108,33 +133,42 @@
         </td>
         <td>
           <nz-tree-select
-              [nzExpandedKeys]="expandKeys"
-              [nzNodes]="nodes"
-              nzShowSearch
-              nzPlaceHolder="请选择你的部门"
-              [(ngModel)]="editCache[data.id].data.department_id"
-              id="department_id"
-              (ngModelChange)="onChange($event)"
-            ></nz-tree-select>
+            [nzExpandedKeys]="expandKeys"
+            [nzNodes]="nodes"
+            nzShowSearch
+            nzPlaceHolder="请选择你的部门"
+            [(ngModel)]="editCache[data.id].data.department_id"
+            id="department_id"
+            (ngModelChange)="onChange($event)"
+          ></nz-tree-select>
         </td>
         <td>
           <nz-input-number
-              [nzMin]="18"
-              [nzMax]="120"
-              [nzStep]="1"
-              [nzFormatter]="formatterAge"
-              [nzParser]="parserAge"
-              [(ngModel)]="editCache[data.id].data.age"
-            ></nz-input-number>
+            [nzMin]="18"
+            [nzMax]="120"
+            [nzStep]="1"
+            [nzFormatter]="formatterAge"
+            [nzParser]="parserAge"
+            [(ngModel)]="editCache[data.id].data.age"
+          ></nz-input-number>
         </td>
         <td>
-          <nz-radio-group id="gender" [(ngModel)]="editCache[data.id].data.gender" nzButtonStyle="solid">
+          <nz-radio-group
+            id="gender"
+            [(ngModel)]="editCache[data.id].data.gender"
+            nzButtonStyle="solid"
+          >
             <label nz-radio-button nzValue="M">男</label>
             <label nz-radio-button nzValue="F">女</label>
           </nz-radio-group>
         </td>
         <td>
-          <nz-switch id="is_leader"  [(ngModel)]="editCache[data.id].data.is_leader" nzCheckedChildren="是" nzUnCheckedChildren="否"></nz-switch>
+          <nz-switch
+            id="is_leader"
+            [(ngModel)]="editCache[data.id].data.is_leader"
+            nzCheckedChildren="是"
+            nzUnCheckedChildren="否"
+          ></nz-switch>
         </td>
         <td>
           <nz-select
@@ -151,30 +185,50 @@
           </nz-select>
         </td>
         <td>
-          <nz-tag [nzColor]="'#2db7f5'"><a (click)="saveEdit(data.id)" class="save">保存</a></nz-tag>
-          <nz-tag [nzColor]="'#f50'"><a
-            nz-popconfirm
-            nzPopconfirmTitle="确定取消?"
-            (nzOnConfirm)="cancelEdit(data.id)"
-            >取消</a></nz-tag>
+          <nz-tag [nzColor]="'#2db7f5'"
+            ><a (click)="saveEdit(data.id)" class="save">保存</a></nz-tag
+          >
+          <nz-tag [nzColor]="'#f50'"
+            ><a
+              nz-popconfirm
+              nzPopconfirmTitle="确定取消?"
+              (nzOnConfirm)="cancelEdit(data.id)"
+              >取消</a
+            ></nz-tag
+          >
         </td>
       </ng-template>
     </tr>
   </tbody>
 </nz-table>
-<nz-modal [(nzVisible)]="isVisible" nzTitle="添加员工" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+<nz-modal
+  [(nzVisible)]="isVisible"
+  nzTitle="添加员工"
+  (nzOnCancel)="handleCancel()"
+  (nzOnOk)="handleOk()"
+>
   <ng-container *nzModalContent>
     <form nz-form [formGroup]="validateAddUserForm">
       <nz-form-item>
         <nz-form-label [nzSpan]="5" nzFor="username">账号</nz-form-label>
         <nz-form-control [nzSpan]="12" nzErrorTip="请输入员工账号">
-          <input id="username" type="text" nz-input formControlName="username" />
+          <input
+            id="username"
+            type="text"
+            nz-input
+            formControlName="username"
+          />
         </nz-form-control>
       </nz-form-item>
       <nz-form-item>
         <nz-form-label [nzSpan]="5" nzFor="password">密码</nz-form-label>
         <nz-form-control [nzSpan]="12" nzErrorTip="请输入员工密码">
-          <input id="password" type="password" nz-input formControlName="password" />
+          <input
+            id="password"
+            type="password"
+            nz-input
+            formControlName="password"
+          />
         </nz-form-control>
       </nz-form-item>
       <nz-form-item>
@@ -186,7 +240,11 @@
       <nz-form-item>
         <nz-form-label [nzSpan]="5" nzFor="gender">性别</nz-form-label>
         <nz-form-control [nzSpan]="12" nzErrorTip="请选择员工性别">
-          <nz-radio-group id="gender" formControlName="gender" nzButtonStyle="solid">
+          <nz-radio-group
+            id="gender"
+            formControlName="gender"
+            nzButtonStyle="solid"
+          >
             <label nz-radio-button nzValue="M">男</label>
             <label nz-radio-button nzValue="F">女</label>
           </nz-radio-group>
@@ -196,34 +254,39 @@
         <nz-form-label [nzSpan]="5" nzFor="name">年龄</nz-form-label>
         <nz-form-control [nzSpan]="12" nzErrorTip="请输入员工年龄">
           <nz-input-number
-              [nzMin]="18"
-              [nzMax]="120"
-              [nzStep]="1"
-              [nzFormatter]="formatterAge"
-              [nzParser]="parserAge"
-              formControlName="age"
-            ></nz-input-number>
+            [nzMin]="18"
+            [nzMax]="120"
+            [nzStep]="1"
+            [nzFormatter]="formatterAge"
+            [nzParser]="parserAge"
+            formControlName="age"
+          ></nz-input-number>
         </nz-form-control>
       </nz-form-item>
       <nz-form-item>
         <nz-form-label [nzSpan]="5" nzFor="is_leader">是否领导</nz-form-label>
         <nz-form-control [nzSpan]="12" nzErrorTip="">
-          <nz-switch id="is_leader"  formControlName="is_leader" nzCheckedChildren="是" nzUnCheckedChildren="否"></nz-switch>
+          <nz-switch
+            id="is_leader"
+            formControlName="is_leader"
+            nzCheckedChildren="是"
+            nzUnCheckedChildren="否"
+          ></nz-switch>
         </nz-form-control>
       </nz-form-item>
       <nz-form-item>
         <nz-form-label [nzSpan]="5" nzFor="department_id">部门</nz-form-label>
         <nz-form-control [nzSpan]="12" nzErrorTip="请输入员工部门">
           <nz-tree-select
-              [nzExpandedKeys]="expandKeys"
-              [nzNodes]="nodes"
-              nzShowSearch
-              nzPlaceHolder="请选择你的部门"
-              [(ngModel)]="value"
-              id="department_id"
-              formControlName="department_id"
-              (ngModelChange)="onChange($event)"
-            ></nz-tree-select>
+            [nzExpandedKeys]="expandKeys"
+            [nzNodes]="nodes"
+            nzShowSearch
+            nzPlaceHolder="请选择你的部门"
+            [(ngModel)]="value"
+            id="department_id"
+            formControlName="department_id"
+            (ngModelChange)="onChange($event)"
+          ></nz-tree-select>
         </nz-form-control>
       </nz-form-item>
       <nz-form-item>

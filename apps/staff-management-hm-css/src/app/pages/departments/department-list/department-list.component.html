@@ -1,5 +1,5 @@
 <form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()">
-  <nz-form-item>
+  <!-- <nz-form-item>
     <nz-form-label [nzSpan]="5" nzFor="name">名字</nz-form-label>
     <nz-form-control [nzSpan]="12" nzErrorTip="请输入员工姓名">
       <input id="name" type="text" nz-input formControlName="name" />
@@ -33,10 +33,10 @@
     <nz-form-control [nzSpan]="12" nzErrorTip="出勤多于">
       <input id="more" type="text" nz-input formControlName="more" />
     </nz-form-control>
-  </nz-form-item>
+  </nz-form-item> -->
   <nz-form-item>
     <nz-form-control [nzSpan]="12" [nzOffset]="10">
-      <button nz-button nzType="primary">搜索</button>&nbsp;&nbsp;
+      <!-- <button nz-button nzType="primary">搜索</button>&nbsp;&nbsp; -->
       <button nz-button nzType="default" (click)="openModal()">添加部门</button>
     </nz-form-control>
   </nz-form-item>
@@ -69,8 +69,12 @@
         <td nzLeft>{{ data.name }}</td>
         <td nzLeft>{{ data.description }}</td>
         <td>
-          <nz-tag [nzColor]="'#2db7f5'"><a (click)="startEdit(data.id)">编辑</a></nz-tag>
-          <nz-tag [nzColor]="'#f50'"><a (click)="deleteItem(data.id)">删除</a></nz-tag>
+          <nz-tag [nzColor]="'#2db7f5'"
+            ><a (click)="startEdit(data.id)">编辑</a></nz-tag
+          >
+          <nz-tag [nzColor]="'#f50'"
+            ><a (click)="deleteItem(data.id)">删除</a></nz-tag
+          >
         </td>
       </ng-container>
       <ng-template #editTemplate>
@@ -108,18 +112,32 @@
     </tr>
   </tbody>
 </nz-table>
-<nz-modal [(nzVisible)]="isVisible" nzTitle="添加部门" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
+<nz-modal
+  [(nzVisible)]="isVisible"
+  nzTitle="添加部门"
+  (nzOnCancel)="handleCancel()"
+  (nzOnOk)="handleOk()"
+>
   <ng-container *nzModalContent>
     <form nz-form [formGroup]="validateAddForm">
       <nz-form-item>
         <nz-form-label [nzSpan]="5" nzFor="name">部门名</nz-form-label>
         <nz-form-control [nzSpan]="12" nzErrorTip="">
-          <input nz-input placeholder="部门名（全英文）" formControlName="name" />
-        </nz-form-control>
-      </nz-form-item><nz-form-item>
+          <input
+            nz-input
+            placeholder="部门名（全英文）"
+            formControlName="name"
+          />
+        </nz-form-control> </nz-form-item
+      ><nz-form-item>
         <nz-form-label [nzSpan]="5" nzFor="description">介绍</nz-form-label>
         <nz-form-control [nzSpan]="12" nzErrorTip="">
-          <textarea nz-input placeholder="介绍" formControlName="description" [nzAutosize]="{ minRows: 3, maxRows: 5 }"></textarea>
+          <textarea
+            nz-input
+            placeholder="介绍"
+            formControlName="description"
+            [nzAutosize]="{ minRows: 3, maxRows: 5 }"
+          ></textarea>
         </nz-form-control>
       </nz-form-item>
     </form>
