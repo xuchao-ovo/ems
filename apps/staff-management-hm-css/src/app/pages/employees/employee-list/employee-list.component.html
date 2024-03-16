@@ -70,17 +70,12 @@
             图表展示
           </button>
         </nz-form-control>
-        <!-- <div *ngIf="displayChart"> -->
-        <canvas
-          *ngIf="displayChart"
-          id="agePieChart"
-          width="10"
-          height="5"
-        ></canvas>
-        <button nz-button nzType="default" (click)="closeChart()">
-          关闭饼图
-        </button>
-        <!-- </div> -->
+        <div *ngIf="displayChart">
+          <canvas id="agePieChart" width="400px" height="200px"></canvas>
+          <button nz-button nzType="default" (click)="closeChart()">
+            关闭饼图
+          </button>
+        </div>
       </nz-form-item>
     </form>
   </nz-collapse-panel>

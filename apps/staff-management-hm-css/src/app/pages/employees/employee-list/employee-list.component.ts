@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnInit, SimpleChanges } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { EmployeeService } from "../service/employee.service";
 import { ICreateEmployee, IEmployee } from "../interface/employee.interface";
@@ -28,6 +28,8 @@ export class EmployeeListComponent {
   selected_department_id: string = "";
   nodes: node_department[] = [];
   displayChart: boolean = true;
+  agePieChart: Chart | undefined;
+  canvasElement: HTMLCanvasElement | undefined;
   constructor(
     private fb: FormBuilder,
     private employeeService: EmployeeService,
@@ -70,41 +72,58 @@ export class EmployeeListComponent {
     const data = Object.values(ageCounts);
 
     const ctx = document.getElementById("agePieChart") as HTMLCanvasElement;
-    const agePieChart = new Chart(ctx, {
-      type: "pie",
-      data: {
-        labels: labels,
-        datasets: [
-          {
-            data: data,
-            backgroundColor: [
-              "rgba(255, 99, 132, 0.6)",
-              "rgba(54, 162, 235, 0.6)",
-              "rgba(255, 206, 86, 0.6)",
-              "rgba(75, 192, 192, 0.6)",
-              "rgba(153, 102, 255, 0.6)",
-              "rgba(255, 159, 64, 0.6)",
-            ],
-            borderColor: [
-              "rgba(255, 99, 132, 1)",
-              "rgba(54, 162, 235, 1)",
-              "rgba(255, 206, 86, 1)",
-              "rgba(75, 192, 192, 1)",
-              "rgba(153, 102, 255, 1)",
-              "rgba(255, 159, 64, 1)",
-            ],
-            borderWidth: 1,
-          },
-        ],
-      },
-      options: {
-        responsive: true,
-      },
-    });
-    this.displayChart = true;
+    if (ctx) {
+      ctx.width = 400; // 设置 Canvas 宽度
+      ctx.height = 200; // 设置 Canvas 高度
+      ctx.style.display = "none";
+      ctx.offsetHeight; // 强制重绘
+      ctx.style.display = "block";
+
+      this.agePieChart = new Chart(ctx, {
+        type: "pie",
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              data: data,
+              backgroundColor: [
+                "rgba(255, 99, 132, 0.6)",
+                "rgba(54, 162, 235, 0.6)",
+                "rgba(255, 206, 86, 0.6)",
+                "rgba(75, 192, 192, 0.6)",
+                "rgba(153, 102, 255, 0.6)",
+                "rgba(255, 159, 64, 0.6)",
+              ],
+              borderColor: [
+                "rgba(255, 99, 132, 1)",
+                "rgba(54, 162, 235, 1)",
+                "rgba(255, 206, 86, 1)",
+                "rgba(75, 192, 192, 1)",
+                "rgba(153, 102, 255, 1)",
+                "rgba(255, 159, 64, 1)",
+              ],
+              borderWidth: 1,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+        },
+      }) as any;
+      this.displayChart = true;
+    } else {
+      console.error("Canvas element not found or not available.");
+    }
   }
-  closeChart(): void {
-    this.displayChart = false;
+
+  closeChart() {
+    if (this.agePieChart) {
+      this.agePieChart.destroy(); // 销毁饼图实例
+    }
+
+    if (this.canvasElement) {
+      this.canvasElement.remove(); // 移除canvas元素
+    }
   }
 
   handleOk() {
